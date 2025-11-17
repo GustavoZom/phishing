@@ -150,5 +150,55 @@ export const groupService = {
       console.error('Erro ao adicionar membro:', error);
       throw new Error(error.response?.data?.message || 'Erro ao adicionar membro');
     }
+  },
+
+  async updateMember(memberId, memberData) {
+    try {
+      console.log('Atualizando membro ID:', memberId, memberData);
+      
+      const formData = new FormData();
+      formData.append('name', memberData.name);
+      formData.append('person_code', memberData.person_code);
+      formData.append('email', memberData.email);
+      
+      const response = await api.patch(`/target/${memberId}`, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      
+      console.log('Membro atualizado:', response.data);
+      return response.data;
+      
+    } catch (error) {
+      console.error('Erro ao atualizar membro:', error);
+      throw new Error(error.response?.data?.message || 'Erro ao atualizar membro');
+    }
+  },
+
+  async deleteMember(memberId) {
+    try {
+      console.log('Excluindo membro ID:', memberId);
+      const response = await api.delete(`/target/${memberId}`);
+      console.log('Membro excluído:', response.data);
+      return response.data;
+      
+    } catch (error) {
+      console.error('Erro ao excluir membro:', error);
+      throw new Error(error.response?.data?.message || 'Erro ao excluir membro');
+    }
+  },
+
+  async getMemberById(memberId) {
+    try {
+      console.log('Buscando membro ID:', memberId);
+      const response = await api.get(`/target/${memberId}`);
+      console.log('Membro encontrado:', response.data);
+      return response.data;
+      
+    } catch (error) {
+      console.error('Erro ao buscar membro:', error);
+      throw new Error(error.response?.data?.message || 'Erro ao carregar membro');
+    }
   }
 };
