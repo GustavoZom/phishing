@@ -1,14 +1,46 @@
+import { useState, useEffect } from 'react';
+import { templateService } from '../../services/templateService';
 import './templateCriar.css';
 
-function TemplateList({ onTemplateSelect, selectedTemplateId }) {
-  const templates = [
-    { id: 6, nome: 'Netflix 2', tipo: 'Phishing', dataCriacao: '2024-01-15' },
-    { id: 5, nome: 'iFood 1', tipo: 'Phishing', dataCriacao: '2024-01-10' },
-    { id: 4, nome: 'Banco do Brasil 1', tipo: 'Phishing', dataCriacao: '2024-01-08' },
-    { id: 3, nome: 'Netflix 1', tipo: 'Phishing', dataCriacao: '2024-01-05' },
-    { id: 2, nome: 'Steam 1', tipo: 'Phishing', dataCriacao: '2024-01-03' },
-    { id: 1, nome: 'Mercado Livre 1', tipo: 'Phishing', dataCriacao: '2024-01-01' },
-  ];
+function TemplateList({ onTemplateSelect, selectedTemplateId, refreshTrigger }) {
+  const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadTemplates();
+  }, [refreshTrigger]);
+
+  const loadTemplates = async () => {
+    setLoading(true);
+    try {
+      const response = await templateService.getTemplates();
+      setTemplates(response.items || []);
+    } catch (error) {
+      console.error('Erro ao carregar templates:', error);
+      setTemplates([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <span>Carregando templates...</span>
+      </div>
+    );
+  }
+
+  if (templates.length === 0) {
+    return (
+      <div className="empty-state">
+        <span>Nenhum template encontrado</span>
+        <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
+          Crie seu primeiro template usando o formulário ao lado
+        </p>
+      </div>
+    );
+  }
 
   return (
     <table className="template-list">
@@ -16,7 +48,7 @@ function TemplateList({ onTemplateSelect, selectedTemplateId }) {
         <tr>
           <th>Id</th>
           <th>Nome</th>
-          <th>Tipo</th>
+          <th>Criado em</th>
         </tr>
       </thead>
       <tbody>
@@ -25,12 +57,13 @@ function TemplateList({ onTemplateSelect, selectedTemplateId }) {
             key={template.id} 
             onClick={() => onTemplateSelect && onTemplateSelect(template)}
             style={{ 
-              backgroundColor: selectedTemplateId === template.id ? '#e6f2ff' : 'transparent'
+              backgroundColor: selectedTemplateId === template.id ? '#e6f2ff' : 'transparent',
+              cursor: 'pointer'
             }}
           >
             <td>{template.id}</td>
-            <td>{template.nome}</td>
-            <td>{template.tipo}</td>
+            <td>{template.name}</td>
+            <td>{new Date(template.created_at).toLocaleDateString('pt-BR')}</td>
           </tr>
         ))}
       </tbody>

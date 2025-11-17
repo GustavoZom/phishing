@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import GroupList from '../../Modules/GroupList/GroupList';
 import './grupoGerencia.css';
 
@@ -8,7 +9,6 @@ function GrupoGerencia() {
 
   const handleGroupSelect = (group) => {
     setSelectedGroup(group);
-    console.log('Grupo selecionado:', group);
   };
 
   const handleRefresh = () => {
@@ -20,7 +20,9 @@ function GrupoGerencia() {
       <div className="gGerenciarContainer">
         <div className="campanhaTitle">
           <h2>Grupos</h2>
-          <span className="btn-novo-grupo">Novo Grupo</span>
+          <Link to="/grupoCriar">
+            <span className="btn-novo-grupo">Novo Grupo</span>
+          </Link>
         </div>
         
         <div className="gSectionContainer">

@@ -30,8 +30,8 @@ export const templateService = {
       formData.append('name', templateData.name);
       formData.append('code', templateData.code);
       
-      if (templateData.desc) {
-        formData.append('desc', templateData.desc);
+      if (templateData.description) {
+        formData.append('desc', templateData.description);
       }
       
       const response = await api.post('/template/', formData, {
@@ -70,8 +70,9 @@ export const templateService = {
       console.log('Atualizando template ID:', id, templateData);
       
       const formData = new FormData();
+      formData.append('id', id);
       if (templateData.name) formData.append('name', templateData.name);
-      if (templateData.desc) formData.append('desc', templateData.desc);
+      if (templateData.description) formData.append('desc', templateData.description);
       if (templateData.code) formData.append('code', templateData.code);
       
       const response = await api.put(`/template/`, formData, {

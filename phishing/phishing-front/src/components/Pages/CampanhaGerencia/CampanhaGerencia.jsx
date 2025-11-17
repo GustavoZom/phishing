@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import CampaignListInfo from "../../Modules/CampaignListInfo/CampaignListInfo";
 import { groupService } from '../../services/groupService';
 import { templateService } from '../../services/templateService';
@@ -67,21 +68,14 @@ function CampanhaGerencia() {
         setRefreshTrigger(prev => prev + 1);
     };
 
-    const getStatusText = (status) => {
-        const statusMap = {
-            'a': 'Ativo',
-            'i': 'Inativo',
-            'f': 'Finalizado'
-        };
-        return statusMap[status] || '';
-    };
-
     return (
         <div className="mainContainer">
             <div className="cFilterContent">
                 <div className="campanhaTitle">
                     <h2>Campanhas</h2>
-                    <span>Nova Campanha</span>
+                    <Link to="/campanhaCriar">
+                        <span>Nova Campanha</span>
+                    </Link>
                 </div>
 
                 <div className="cFilterContainer">

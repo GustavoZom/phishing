@@ -41,6 +41,8 @@
   cursor: pointer;
   transition: all 0.2s;
   background: white;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .btn-novo-grupo:hover {
@@ -145,9 +147,10 @@
 .template-preview {
   width: 100%;
   min-height: 250px;
-  border: 1px dashed #ddd;
-  padding: 15px;
-  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
 }
 
 .preview-placeholder {
@@ -216,6 +219,147 @@
   height: 100%;
 }
 
+/* Novos estilos para o TinyMCE e funcionalidades */
+.variables-info {
+  background-color: #f0f8ff;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-left: 4px solid #489CFB;
+}
+
+.variables-info h4 {
+  margin: 0 0 10px 0;
+  color: #313131;
+  font-size: 14px;
+}
+
+.variables-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.variable-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.variable-code {
+  background-color: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.variables-warning {
+  margin: 10px 0 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.variables-warning strong {
+  color: #313131;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.btn-exemplo {
+  padding: 6px 12px;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.btn-exemplo:hover {
+  background-color: #138496;
+}
+
+/* Estilos para o TinyMCE */
+.tox-tinymce {
+  border-radius: 4px !important;
+  border: 1px solid #ccc !important;
+}
+
+/* Estados de loading */
+.loading-container,
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-style: italic;
+}
+
+.empty-state {
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px dashed #ddd;
+}
+
+/* Estados do formulário */
+.formGroup input:disabled,
+.formGroup textarea:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* Tabela de templates */
+.template-list {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.template-list thead {
+  background-color: #f5f5f5;
+  position: sticky;
+  top: 0;
+}
+
+.template-list th {
+  text-align: left;
+  padding: 12px 15px;
+  font-weight: 600;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: #313131;
+}
+
+.template-list td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+.template-list tr {
+  transition: background-color 0.2s;
+}
+
+.template-list tr:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.template-list tr:last-child td {
+  border-bottom: none;
+}
+
 @media (max-width: 1024px) {
   .gSectionContainer {
     flex-direction: column;
@@ -224,5 +368,15 @@
   .gCriarSection.left,
   .gCriarSection.right {
     width: 100%;
+  }
+  
+  .variables-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .editor-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
   }
 }
