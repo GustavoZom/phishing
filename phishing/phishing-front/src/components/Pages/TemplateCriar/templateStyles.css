@@ -1,0 +1,113 @@
+/* Estilos globais para templates de email */
+.template-container {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f4f4;
+  min-height: 200px;
+}
+
+.template-content {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.template-header {
+  text-align: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e50914;
+  margin-bottom: 25px;
+}
+
+.template-header h1 {
+  color: #e50914;
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.template-body {
+  color: #333;
+  line-height: 1.6;
+}
+
+.template-body h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.template-body-content {
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+.template-button-container {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.template-action-button {
+  display: inline-block;
+  background-color: #e50914;
+  color: white;
+  padding: 14px 35px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.template-action-button:hover {
+  background-color: #c40812;
+}
+
+.template-footer {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+.template-footer p {
+  margin: 0;
+}
+
+/* Estilos para previews em outras páginas */
+.template-preview-container {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.template-preview-content {
+  transform: scale(0.8);
+  transform-origin: top center;
+  pointer-events: none;
+}
+
+.template-preview-content .template-container {
+  padding: 10px;
+  background-color: white;
+}
+
+/* Estados vazios */
+.preview-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-style: italic;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px dashed #ddd;
+}

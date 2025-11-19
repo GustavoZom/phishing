@@ -22,15 +22,25 @@ function CampanhaCriar() {
   
   const [groups, setGroups] = useState([]);
   const [templates, setTemplates] = useState([]);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  //Carregar grupos e templates
+  // Carregar grupos e templates
   useEffect(() => {
     loadGroups();
     loadTemplates();
   }, []);
+
+  // Carregar dados do template quando selecionado
+  useEffect(() => {
+    if (formData.template_id) {
+      loadTemplateData(formData.template_id);
+    } else {
+      setSelectedTemplate(null);
+    }
+  }, [formData.template_id]);
 
   const loadGroups = async () => {
     try {
@@ -50,6 +60,26 @@ function CampanhaCriar() {
     }
   };
 
+  const loadTemplateData = async (templateId) => {
+    try {
+      const template = await templateService.getTemplateById(templateId);
+      setSelectedTemplate(template);
+      
+      // Preencher campos padrão baseados no template
+      if (template) {
+        setFormData(prev => ({
+          ...prev,
+          subject_text: prev.subject_text || 'Assunto Importante',
+          title_text: prev.title_text || 'Título do Email',
+          body_text: prev.body_text || 'Conteúdo do email...',
+          button_text: prev.button_text || 'Clique Aqui'
+        }));
+      }
+    } catch (err) {
+      console.error('Erro ao carregar template:', err);
+    }
+  };
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -60,8 +90,14 @@ function CampanhaCriar() {
   const handleCreateCampaign = async () => {
     // Validações básicas
     if (!formData.name || !formData.group_id || !formData.start_date || 
-        !formData.end_date || !formData.send_time || !formData.email) {
+        !formData.end_date || !formData.send_time || !formData.email ||
+        !formData.template_id) {
       setError('Preencha todos os campos obrigatórios');
+      return;
+    }
+
+    if (!formData.subject_text || !formData.title_text || !formData.body_text) {
+      setError('Preencha todos os campos do template');
       return;
     }
 
@@ -76,7 +112,7 @@ function CampanhaCriar() {
 
       setSuccess('Campanha criada com sucesso!');
       
-      //Limpar o form
+      // Limpar o form
       setFormData({
         name: '',
         group_id: '',
@@ -90,6 +126,7 @@ function CampanhaCriar() {
         button_text: '',
         email: ''
       });
+      setSelectedTemplate(null);
       
     } catch (err) {
       console.error('Erro ao criar campanha:', err);
@@ -113,8 +150,33 @@ function CampanhaCriar() {
       button_text: '',
       email: ''
     });
+    setSelectedTemplate(null);
     setError('');
     setSuccess('');
+  };
+
+  const renderEmailPreview = () => {
+    if (!selectedTemplate?.code) {
+      return (
+        <div className="previewPlaceholder">
+          Selecione um template para ver a prévia do email
+        </div>
+      );
+    }
+
+    const previewHtml = selectedTemplate.code
+      .replace(/{{title}}/g, formData.title_text || 'Título do Email')
+      .replace(/{{body}}/g, formData.body_text || 'Conteúdo do email...')
+      .replace(/{{name}}/g, 'Nome do Usuário')
+      .replace(/{{link}}/g, '#')
+      .replace(/{{button_text}}/g, formData.button_text || 'Clique Aqui');
+
+    return (
+      <div 
+        className="emailPreviewContent"
+        dangerouslySetInnerHTML={{ __html: previewHtml }}
+      />
+    );
   };
 
   return (
@@ -127,18 +189,18 @@ function CampanhaCriar() {
         <h2>Nova Campanha</h2>
 
         {error && (
-          <div className="error-message">
+          <div className="errorMessage">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="success-message">
+          <div className="successMessage">
             {success}
           </div>
         )}
 
-        {/*Dados da campanha*/}
+        {/* Dados da campanha */}
         <div className="sectionContainer">
           <h3 className="sectionTitle">Dados da Campanha</h3>
           <div className="sectionBox">
@@ -171,7 +233,7 @@ function CampanhaCriar() {
               </div>
 
               <div className="formGroup">
-                <label>Template</label>
+                <label>Template *</label>
                 <select 
                   value={formData.template_id}
                   onChange={(e) => handleInputChange('template_id', e.target.value)}
@@ -234,11 +296,13 @@ function CampanhaCriar() {
 
         {/* Configurar Template */}
         <div className="sectionContainer">
-          <h3 className="sectionTitle">Configurar Template</h3>
+          <h3 className="sectionTitle">
+            Configurar Template {selectedTemplate && `- ${selectedTemplate.name}`}
+          </h3>
           <div className="sectionBox">
             <div className="formSingleColumn">
               <div className="formGroup">
-                <label>Assunto do e-mail</label>
+                <label>Assunto do e-mail *</label>
                 <input 
                   type="text" 
                   placeholder="Seu pagamento está atrasado" 
@@ -249,7 +313,7 @@ function CampanhaCriar() {
               </div>
 
               <div className="formGroup">
-                <label>Título do e-mail</label>
+                <label>Título do e-mail *</label>
                 <input 
                   type="text" 
                   placeholder="Conta Suspensa" 
@@ -260,7 +324,7 @@ function CampanhaCriar() {
               </div>
 
               <div className="formGroup">
-                <label>Corpo do e-mail</label>
+                <label>Corpo do e-mail *</label>
                 <textarea 
                   rows="6" 
                   placeholder="Digite o conteúdo do e-mail..." 
@@ -289,16 +353,7 @@ function CampanhaCriar() {
           <h3 className="sectionTitle">Prévia do E-mail</h3>
           <div className="sectionBox previewBox">
             <div className="emailPreview">
-              <h2 style={{ color: "#e50914" }}>NETFLIX</h2>
-              <h3>{formData.title_text || "Título do E-mail"}</h3>
-              <p>
-                {formData.body_text || "Conteúdo do e-mail será exibido aqui..."}
-              </p>
-              {formData.button_text && (
-                <button className="btn-preview">
-                  {formData.button_text}
-                </button>
-              )}
+              {renderEmailPreview()}
             </div>
           </div>
         </div>
@@ -306,14 +361,14 @@ function CampanhaCriar() {
         {/* Botões de Ação */}
         <div className="actionButtons">
           <button 
-            className="btn-cancel" 
+            className="btnCancel" 
             onClick={handleClearForm}
             disabled={loading}
           >
             Cancelar
           </button>
           <button 
-            className="btn-create" 
+            className="btnCreate" 
             onClick={handleCreateCampaign}
             disabled={loading}
           >

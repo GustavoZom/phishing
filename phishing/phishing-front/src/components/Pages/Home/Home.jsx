@@ -6,7 +6,7 @@ import CampaignList from '../../Modules/CampaignList/CampaignList';
 import { campaignService } from '../../services/campaignService';
 import './home.css';
 
-//Const para configs
+// Constantes para configs
 const STATS_CONFIG = {
     active: {
         icon: BsFileEarmarkPlay,
@@ -25,18 +25,18 @@ const STATS_CONFIG = {
     }
 };
 
-const INITIAL_STATS ={
+const INITIAL_STATS = {
     active: 0,
     total: 0,
     finished: 0
 };
 
-function Home(){
+function Home() {
     const [campaignStats, setCampaignStats] = useState(INITIAL_STATS);
     const [loading, setLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-    //Carregar estatistica
+    //Carregar estatística
     const loadCampaignStats = useCallback(async () => {
         try {
             setLoading(true);
@@ -69,7 +69,7 @@ function Home(){
         setRefreshTrigger(prev => prev + 1);
     };
 
-    //Seção de estatistica
+    //Seção de estatística
     const StatItem = ({ type, value }) => {
         const config = STATS_CONFIG[type];
         const IconComponent = config.icon;
@@ -102,7 +102,7 @@ function Home(){
         <div className="campaignHeader">
             <h2>Campanhas</h2>
             <button
-                className="btn-refresh"
+                className="btnRefresh"
                 onClick={handleRefresh}
                 disabled={loading}
                 aria-label={loading ? 'Atualizando Campanhas' : 'Atualizar campanhas'}
@@ -118,7 +118,7 @@ function Home(){
             </div>
 
             <div className="hContent">
-                <div className="hSection left">
+                <div className="hSectionLeft">
                     <GeneralViewSection/>
 
                     <div className="campaign">
@@ -127,7 +127,7 @@ function Home(){
                     </div>
                 </div>
                 
-                <div className="hSection right">
+                <div className="hSectionRight">
                     <div className="cardContainer">
                         <CampaignCardRecent refreshTrigger={refreshTrigger}/>
                         <CampaignCardDeadline refreshTrigger={refreshTrigger}/>
@@ -136,6 +136,6 @@ function Home(){
             </div>
         </div>
     );
-};
+}
 
 export default Home;

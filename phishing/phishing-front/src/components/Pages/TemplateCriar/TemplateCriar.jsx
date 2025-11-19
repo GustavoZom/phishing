@@ -19,26 +19,25 @@ function TemplateCriar() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [editorLoaded, setEditorLoaded] = useState(false);
+  const [editorMode, setEditorMode] = useState('code'); // 'code' ou 'visual'
 
   // Carregar o script do TinyMCE
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/8/tinymce.min.js';
+    script.src = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js';
     script.referrerPolicy = 'origin';
-    script.crossOrigin = 'anonymous';
     script.onload = () => {
-      // Inicializar o editor após o script carregar
       if (window.tinymce) {
         window.tinymce.init({
           selector: '#template-editor',
           height: 500,
-          menubar: true,
+          menubar: 'edit view insert format tools',
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'visualchars', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'code'
           ],
-          toolbar: 'undo redo | blocks | bold italic underline strikethrough | fontfamily fontsize | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | help',
+          toolbar: 'undo redo | blocks | bold italic underline strikethrough | fontfamily fontsize | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code | preview | help',
           content_style: `
             body { 
               font-family: Arial, sans-serif; 
@@ -46,7 +45,6 @@ function TemplateCriar() {
               line-height: 1.6;
               margin: 0;
               padding: 10px;
-              background-color: #f9f9f9;
             }
             .mce-content-body {
               max-width: 600px;
@@ -54,24 +52,10 @@ function TemplateCriar() {
               background: white;
               padding: 20px;
               border-radius: 8px;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            h1 { color: #e50914; font-size: 28px; margin-bottom: 20px; }
-            h2 { color: #333; font-size: 22px; margin-bottom: 15px; }
-            p { margin-bottom: 15px; color: #333; }
-            a.btn { 
-              background-color: #e50914; 
-              color: white; 
-              padding: 12px 30px; 
-              text-decoration: none; 
-              border-radius: 4px; 
-              display: inline-block;
-              font-weight: bold;
             }
           `,
           branding: false,
           promotion: false,
-          statusbar: false,
           setup: (editor) => {
             editorRef.current = editor;
             editor.on('init', () => {
@@ -89,20 +73,19 @@ function TemplateCriar() {
     };
     document.head.appendChild(script);
 
-    // Cleanup
     return () => {
-      if (window.tinymce) {
-        window.tinymce.remove('#template-editor');
+      if (window.tinymce && editorRef.current) {
+        window.tinymce.remove(editorRef.current);
       }
     };
   }, []);
 
   // Atualizar conteúdo do editor quando formData.code mudar
   useEffect(() => {
-    if (editorRef.current && editorLoaded && formData.code) {
+    if (editorRef.current && editorLoaded && formData.code && editorMode === 'visual') {
       editorRef.current.setContent(formData.code);
     }
-  }, [formData.code, editorLoaded]);
+  }, [formData.code, editorLoaded, editorMode]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -165,16 +148,26 @@ function TemplateCriar() {
       setError('');
       setSuccess('');
 
-      await templateService.createTemplate({
-        name: formData.name,
-        desc: formData.desc || '',
-        code: formData.code
-      });
+      if (selectedTemplate) {
+        // Atualizar template existente
+        await templateService.updateTemplate(selectedTemplate.id, {
+          name: formData.name,
+          description: formData.desc || '',
+          code: formData.code
+        });
+        setSuccess('Template atualizado com sucesso!');
+      } else {
+        // Criar novo template
+        await templateService.createTemplate({
+          name: formData.name,
+          description: formData.desc || '',
+          code: formData.code
+        });
+        setSuccess('Template criado com sucesso!');
+      }
 
-      setSuccess('Template criado com sucesso!');
       setFormData({ name: '', desc: '', code: '' });
       setSelectedTemplate(null);
-      
       setRefreshTrigger(prev => prev + 1);
       
       setTimeout(() => {
@@ -198,77 +191,89 @@ function TemplateCriar() {
 
   const loadTemplateBase = () => {
     const baseTemplate = `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f4f4f4; padding: 20px;">
-  <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-    
-    <!-- CABEÇALHO - EDITÁVEL -->
-    <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid #e50914; margin-bottom: 20px;">
-      <h1 style="color: #e50914; margin: 0; font-size: 28px;">{{title}}</h1>
-    </div>
-    
-    <!-- CONTEÚDO PRINCIPAL - EDITÁVEL -->
-    <div style="margin: 25px 0; color: #333;">
-      <h2 style="color: #333; margin-bottom: 15px;">Olá {{name}},</h2>
-      
-      <!-- ÁREA EDITÁVEL PARA O CORPO DO EMAIL -->
-      <div style="font-size: 16px; line-height: 1.6;">
-        {{body}}
+  <div class="template-container">
+    <div class="template-content">
+      <div class="template-header">
+        <h1>{{title}}</h1>
       </div>
       
-      <!-- BOTÃO - EDITÁVEL -->
-      <div style="text-align: center; margin: 25px 0;">
-        <a href="{{link}}" style="display: inline-block; background-color: #e50914; color: white; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px;">
-          Clique Aqui
-        </a>
+      <div class="template-body">
+        <h2>Olá {{name}},</h2>
+        
+        <div class="template-body-content">
+          {{body}}
+        </div>
+        
+        <div class="template-button-container">
+          <a href="{{link}}" class="template-action-button">
+            {{button_text}}
+          </a>
+        </div>
+      </div>
+      
+      <div class="template-footer">
+        <p>Esta é uma mensagem automática, por favor não responda este email.</p>
+        <p>&copy; 2024 Sua Empresa. Todos os direitos reservados.</p>
       </div>
     </div>
-    
-    <!-- RODAPÉ - EDITÁVEL -->
-    <div style="border-top: 1px solid #ddd; padding-top: 20px; font-size: 12px; color: #999; text-align: center;">
-      <p>Esta é uma mensagem automática, por favor não responda este email.</p>
-    </div>
-    
-  </div>
-</div>
-    `.trim();
+  </div>`;
 
-    setFormData(prev => ({
-      ...prev,
-      code: baseTemplate
-    }));
-    setError('');
+    setTimeout(() => {
+      setFormData(prev => ({
+        ...prev,
+        code: baseTemplate.trim()
+      }));
+      setError('');
+    }, 0);
   };
 
   const renderPreview = () => {
     if (!formData.code) {
       return (
-        <div className="preview-placeholder">
+        <div className="previewPlaceholder">
           O preview do template será exibido aqui quando você criar o conteúdo
         </div>
       );
     }
 
     const previewHtml = formData.code
-      .replace(/{{title}}/g, 'Título placeholder')
-      .replace(/{{body}}/g, '<p>Conteudo placeholder.</p>')
-      .replace(/{{name}}/g, 'Nome placholder')
-      .replace(/{{link}}/g, '#');
+      .replace(/{{title}}/g, 'Título do Email')
+      .replace(/{{body}}/g, '<p>Este é o conteúdo principal do email que será personalizado para cada campanha.</p>')
+      .replace(/{{name}}/g, 'Nome do Usuário')
+      .replace(/{{link}}/g, '#')
+      .replace(/{{button_text}}/g, 'Clique Aqui');
 
     return (
       <div 
-        className="template-preview"
+        className="templatePreview"
         dangerouslySetInnerHTML={{ __html: previewHtml }}
       />
     );
+  };
+
+  const toggleEditorMode = () => {
+    setEditorMode(prev => {
+      const newMode = prev === 'code' ? 'visual' : 'code';
+      
+      // Sincronizar conteúdo entre os modos
+      if (newMode === 'visual' && editorRef.current && editorLoaded) {
+        editorRef.current.setContent(formData.code);
+      } else if (newMode === 'code' && editorRef.current && editorLoaded) {
+        const visualContent = editorRef.current.getContent();
+        setFormData(prev => ({ ...prev, code: visualContent }));
+      }
+      
+      return newMode;
+    });
   };
 
   return (
     <div className="mainContainer">
       <div className="gCriarContainer">
         <div className="campanhaTitle">
-          <h2>Criar Template</h2>
+          <h2>{selectedTemplate ? 'Editar Template' : 'Criar Template'}</h2>
           <button 
-            className="btn-novo-grupo"
+            className="btnNovoGrupo"
             onClick={() => navigate('/templates')}
           >
             Voltar para Templates
@@ -291,13 +296,13 @@ function TemplateCriar() {
               <h3>Dados do Template</h3>
               
               {error && (
-                <div className="error-message-form">
+                <div className="errorMessageForm">
                   {error}
                 </div>
               )}
               
               {success && (
-                <div className="success-message">
+                <div className="successMessage">
                   {success}
                 </div>
               )}
@@ -326,29 +331,75 @@ function TemplateCriar() {
                 </div>
 
                 <div className="formGroup">
-                  <div className="editor-header">
+                  <div className="editorHeader">
                     <label>Conteúdo do Template *</label>
-                    <button 
-                      type="button" 
-                      onClick={loadTemplateBase}
-                      className="btn-exemplo"
-                      disabled={!editorLoaded}
-                    >
-                      Template Base
-                    </button>
+                    <div className="editorControls">
+                      <button 
+                        type="button" 
+                        onClick={loadTemplateBase}
+                        className="btnExemplo"
+                      >
+                        Template Base
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={toggleEditorMode}
+                        className="btnToggleMode"
+                      >
+                        {editorMode === 'code' ? '🔧 Modo Visual' : '📝 Modo Código'}
+                      </button>
+                    </div>
                   </div>
                   
-                  <textarea 
-                    id="template-editor"
-                    style={{ display: 'none' }}
-                  />
-                  
-                  {!editorLoaded && (
-                    <div className="editor-loading">
-                      <p>Carregando editor...</p>
-                    </div>
+                  {editorMode === 'code' ? (
+                    <textarea 
+                      className="codeEditor"
+                      value={formData.code}
+                      onChange={(e) => handleInputChange('code', e.target.value)}
+                      placeholder="Digite o código HTML do template aqui..."
+                      rows="20"
+                      disabled={loading}
+                    />
+                  ) : (
+                    <>
+                      <textarea 
+                        id="template-editor"
+                        style={{ display: 'none' }}
+                      />
+                      
+                      {!editorLoaded && (
+                        <div className="editorLoading">
+                          <p>Carregando editor visual...</p>
+                        </div>
+                      )}
+                    </>
                   )}
-                
+                </div>
+
+                <div className="variablesInfo">
+                  <h4>Variáveis Disponíveis:</h4>
+                  <div className="variablesGrid">
+                    <div className="variableItem">
+                      <code>{'{{title}}'}</code>
+                      <span>Título do email</span>
+                    </div>
+                    <div className="variableItem">
+                      <code>{'{{body}}'}</code>
+                      <span>Corpo do email</span>
+                    </div>
+                    <div className="variableItem">
+                      <code>{'{{name}}'}</code>
+                      <span>Nome do usuário</span>
+                    </div>
+                    <div className="variableItem">
+                      <code>{'{{link}}'}</code>
+                      <span>Link do botão</span>
+                    </div>
+                    <div className="variableItem">
+                      <code>{'{{button_text}}'}</code>
+                      <span>Texto do botão</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -363,18 +414,18 @@ function TemplateCriar() {
 
             <div className="formActions">
               <button 
-                className="btn-cancelar" 
+                className="btnCancelar" 
                 onClick={handleClearForm}
                 disabled={loading}
               >
                 Limpar
               </button>
               <button 
-                className="btn-criar" 
+                className="btnCriar" 
                 onClick={handleCreateTemplate}
                 disabled={loading || !formData.name.trim() || !formData.code.trim()}
               >
-                {loading ? 'Criando...' : 'Criar Template'}
+                {loading ? (selectedTemplate ? 'Atualizando...' : 'Criando...') : (selectedTemplate ? 'Atualizar Template' : 'Criar Template')}
               </button>
             </div>
           </div>

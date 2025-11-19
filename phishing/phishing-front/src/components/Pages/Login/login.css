@@ -1,4 +1,4 @@
-.login-admin-container {
+.loginContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,7 +8,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.login-admin-card {
+.loginCard {
   background: white;
   padding: 40px;
   border-radius: 15px;
@@ -41,16 +41,11 @@
   font-weight: 700;
 }
 
-.header p {
-  color: #718096;
-  font-size: 16px;
-}
-
-.form-group {
+.formGroup {
   margin-bottom: 24px;
 }
 
-.form-label {
+.formLabel {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
@@ -58,7 +53,7 @@
   font-size: 14px;
 }
 
-.form-input {
+.formInput {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #e2e8f0;
@@ -68,14 +63,14 @@
   background-color: #f7fafc;
 }
 
-.form-input:focus {
+.formInput:focus {
   outline: none;
   border-color: #4299e1;
   background-color: white;
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
 }
 
-.form-input:disabled {
+.formInput:disabled {
   background-color: #edf2f7;
   cursor: not-allowed;
   opacity: 0.6;
@@ -101,38 +96,38 @@
   opacity: 0.6;
 }
 
-.btn-primary {
+.btnPrimary {
   background: linear-gradient(135deg, #4299e1, #3182ce);
   color: white;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btnPrimary:hover:not(:disabled) {
   background: linear-gradient(135deg, #3182ce, #2c5aa0);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(66, 153, 225, 0.3);
 }
 
-.btn-secondary {
+.btnSecondary {
   background: #48bb78;
   color: white;
 }
 
-.btn-secondary:hover:not(:disabled) {
+.btnSecondary:hover:not(:disabled) {
   background: #38a169;
   transform: translateY(-2px);
 }
 
-.btn-danger {
+.btnDanger {
   background: #f56565;
   color: white;
 }
 
-.btn-danger:hover:not(:disabled) {
+.btnDanger:hover:not(:disabled) {
   background: #e53e3e;
   transform: translateY(-2px);
 }
 
-.login-btn.loading {
+.loginBtn.loading {
   background: #a0aec0;
 }
 
@@ -150,40 +145,6 @@
   100% { transform: rotate(360deg); }
 }
 
-.demo-credentials {
-  background: #f7fafc;
-  padding: 20px;
-  border-radius: 8px;
-  margin: 25px 0;
-  border-left: 4px solid #4299e1;
-}
-
-.demo-credentials h4 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  color: #2d3748;
-  font-size: 16px;
-}
-
-.credentials {
-  font-size: 14px;
-}
-
-.credentials p {
-  margin: 6px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.credentials code {
-  background: #edf2f7;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  color: #2d3748;
-}
-
 .alert {
   padding: 16px;
   border-radius: 8px;
@@ -192,66 +153,26 @@
   text-align: center;
 }
 
-.alert-success {
+.alertSuccess {
   background: #f0fff4;
   border: 1px solid #9ae6b4;
   color: #276749;
 }
 
-.alert-error {
+.alertError {
   background: #fed7d7;
   border: 1px solid #feb2b2;
   color: #c53030;
 }
 
-.user-info-section {
-  background: #f7fafc;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 25px;
-}
-
-.user-info-section h3 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  color: #2d3748;
-}
-
-.user-details {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-}
-
-.label {
-  font-weight: 600;
-  color: #4a5568;
-}
-
-.value {
-  color: #2d3748;
-}
-
-.value.admin {
-  color: #d69e2e;
-  font-weight: 600;
-}
-
-.actions-section {
+.actionsSection {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 25px;
 }
 
-.debug-info {
+.debugInfo {
   background: #1a202c;
   color: #e2e8f0;
   padding: 16px;
@@ -260,13 +181,13 @@
   margin-top: 20px;
 }
 
-.debug-info h4 {
+.debugInfo h4 {
   margin-top: 0;
   margin-bottom: 8px;
   color: #90cdf4;
 }
 
-.debug-info pre {
+.debugInfo pre {
   margin: 0;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -274,11 +195,11 @@
 
 /* Responsividade */
 @media (max-width: 480px) {
-  .login-admin-container {
+  .loginContainer {
     padding: 10px;
   }
   
-  .login-admin-card {
+  .loginCard {
     padding: 25px;
   }
   

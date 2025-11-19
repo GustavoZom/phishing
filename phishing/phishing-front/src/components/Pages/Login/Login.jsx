@@ -2,11 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { authService } from '/workspaces/phishing/phishing/phishing-front/src/components/services/authService.js';
 import './login.css';
 
-const LoginAdmin = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
+// Dados do form
+const INITIAL_FORM_DATA = {
+  username: '',
+  password: ''
+};
+
+// Debug
+const DEBUG_MESSAGES = {
+  CHECKING_AUTH: 'Verificando autenticação...',
+  USER_AUTHENTICATED: 'Usuário já autenticado',
+  INVALID_TOKEN: 'Token inválido, fazendo logout...',
+  NO_USER: 'Nenhum usuário autenticado',
+  LOGIN_START: 'Iniciando processo de login...',
+  SENDING_CREDENTIALS: 'Enviando credenciais para o servidor...',
+  SAVING_TOKEN: 'Salvando token de autenticação...',
+  FETCHING_USER: 'Buscando informações do usuário...',
+  LOGIN_SUCCESS: 'Login realizado com sucesso!',
+  LOGIN_FAILED: 'Falha no login: '
+};
+
+const Login = () => {
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [userInfo, setUserInfo] = useState(null);
@@ -14,24 +31,26 @@ const LoginAdmin = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      setDebugInfo(DEBUG_MESSAGES.CHECKING_AUTH);
       if (authService.isAuthenticated()) {
         try {
           const userData = await authService.getCurrentUser();
           setUserInfo(userData);
-          setDebugInfo('Usuário já autenticado');
+          setDebugInfo(DEBUG_MESSAGES.USER_AUTHENTICATED);
         } catch (err) {
           console.error('Erro ao verificar autenticação:', err);
           authService.removeToken();
-          setDebugInfo('Token inválido, fazendo logout...');
+          setDebugInfo(DEBUG_MESSAGES.INVALID_TOKEN);
         }
       } else {
-        setDebugInfo('Nenhum usuário autenticado');
+        setDebugInfo(DEBUG_MESSAGES.NO_USER);
       }
     };
 
     checkAuth();
   }, []);
 
+  // Handler simples sem useCallback
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -45,26 +64,27 @@ const LoginAdmin = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setDebugInfo('Iniciando processo de login...');
+    setDebugInfo(DEBUG_MESSAGES.LOGIN_START);
 
     try {
-      setDebugInfo('Enviando credenciais para o servidor...');
+      setDebugInfo(DEBUG_MESSAGES.SENDING_CREDENTIALS);
       const response = await authService.login(formData.username, formData.password);
       
-      setDebugInfo('Salvando token de autenticação...');
+      setDebugInfo(DEBUG_MESSAGES.SAVING_TOKEN);
       authService.setToken(response.access_token);
       
-      setDebugInfo('Buscando informações do usuário...');
+      setDebugInfo(DEBUG_MESSAGES.FETCHING_USER);
       const userData = await authService.getCurrentUser();
       setUserInfo(userData);
       
-      setDebugInfo('Login realizado com sucesso!');
-      setError('Login realizado com sucesso!');
+      setDebugInfo(DEBUG_MESSAGES.LOGIN_SUCCESS);
+      setError(DEBUG_MESSAGES.LOGIN_SUCCESS);
       
     } catch (err) {
       const errorMsg = err.message || 'Erro desconhecido';
-      setError(`Erro${errorMsg}`);
-      setDebugInfo(`Falha no login: ${errorMsg}`);
+      const fullErrorMsg = `Erro: ${errorMsg}`;
+      setError(fullErrorMsg);
+      setDebugInfo(`${DEBUG_MESSAGES.LOGIN_FAILED}${errorMsg}`);
     } finally {
       setLoading(false);
     }
@@ -72,6 +92,9 @@ const LoginAdmin = () => {
 
   const handleLogout = () => {
     authService.logout();
+    setUserInfo(null);
+    setFormData(INITIAL_FORM_DATA);
+    setDebugInfo(DEBUG_MESSAGES.NO_USER);
   };
 
   const redirectToAdmin = () => {
@@ -82,60 +105,62 @@ const LoginAdmin = () => {
     window.location.href = '/';
   };
 
+  // Componentes simples sem useCallback
+  const DebugInfo = () => (
+    debugInfo && (
+      <div className="debugInfo">
+        <h4>Debug Info:</h4>
+        <pre>{debugInfo}</pre>
+      </div>
+    )
+  );
+
+  const AlertMessage = () => {
+    if (!error) return null;
+    const isSuccess = error.includes('sucesso');
+    return (
+      <div className={`alert ${isSuccess ? 'alertSuccess' : 'alertError'}`}>
+        {error}
+      </div>
+    );
+  };
+
   if (userInfo) {
     return (
-      <div className="login-admin-container">
-        <div className="login-admin-card">
+      <div className="loginContainer">
+        <div className="loginCard">
           <div className="header">
             <h2>Login</h2>
           </div>
-
-          <div className="actions-section">
-            {userInfo.is_admin && (
-              <button 
-                onClick={redirectToAdmin}
-                className="btn btn-primary"
-              >
+          <div className="actionsSection">
+            {userInfo?.is_admin && (
+              <button onClick={redirectToAdmin} className="btn btnPrimary">
                 Acessar Painel Admin Completo
               </button>
             )}
-            
-            <button 
-              onClick={redirectToHome}
-              className="btn btn-secondary"
-            >
+            <button onClick={redirectToHome} className="btn btnSecondary">
               Ir para Página Inicial
             </button>
-
-            <button 
-              onClick={handleLogout}
-              className="btn btn-danger"
-            >
-             Sair do Sistema
+            <button onClick={handleLogout} className="btn btnDanger">
+              Sair do Sistema
             </button>
           </div>
-
-          {debugInfo && (
-            <div className="debug-info">
-              <h4>Informações de Debug:</h4>
-              <pre>{debugInfo}</pre>
-            </div>
-          )}
+          <DebugInfo />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="login-admin-container">
-      <div className="login-admin-card">
+    <div className="loginContainer">
+      <div className="loginCard">
         <div className="header">
           <h2>Login</h2>
         </div>
         
-        <form onSubmit={handleLogin} className="login-form">
-          <div className="form-group">
-            <label htmlFor="username" className="form-label">
+        <form onSubmit={handleLogin} className="loginForm">
+          <div className="formGroup">
+            <label htmlFor="username" className="formLabel">
               Usuário
             </label>
             <input
@@ -147,12 +172,12 @@ const LoginAdmin = () => {
               placeholder="usuario"
               required
               disabled={loading}
-              className="form-input"
+              className="formInput"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">
+          <div className="formGroup">
+            <label htmlFor="password" className="formLabel">
               Senha
             </label>
             <input
@@ -164,14 +189,14 @@ const LoginAdmin = () => {
               placeholder="senha"
               required
               disabled={loading}
-              className="form-input"
+              className="formInput"
             />
           </div>
 
           <button 
             type="submit" 
             disabled={loading}
-            className={`btn btn-primary login-btn ${loading ? 'loading' : ''}`}
+            className={`btn btnPrimary loginBtn ${loading ? 'loading' : ''}`}
           >
             {loading ? (
               <>
@@ -183,22 +208,12 @@ const LoginAdmin = () => {
             )}
           </button>
         </form>
-
-        {error && (
-          <div className={`alert ${error.includes('Sucesso') ? 'alert-success' : 'alert-error'}`}>
-            {error}
-          </div>
-        )}
-
-        {debugInfo && (
-          <div className="debug-info">
-            <h4>Debug Info:</h4>
-            <pre>{debugInfo}</pre>
-          </div>
-        )}
+        
+        <AlertMessage />
+        <DebugInfo />
       </div>
     </div>
   );
 };
 
-export default LoginAdmin;
+export default Login;

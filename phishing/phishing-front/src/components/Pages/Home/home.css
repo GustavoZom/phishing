@@ -2,7 +2,6 @@
   display: flex;
   background-color: #EDF1F4;
   font-weight: bold;
-  
 }
 
 .hSidenav {
@@ -16,34 +15,34 @@
   color: #313131;
 }
 
-.hSection.left {
+.hSectionLeft {
   width: 60%;
   padding: 50px;
 }
 
-.hSection.right {
+.hSectionRight {
   width: 40%;
-  padding: 30px 50px 50px 0px;
+  padding: 30px 50px 50px 0;
 }
 
-.generalView{
-  background-color: #ffff;
+.generalView {
+  background-color: #fff;
   border-radius: 15px;
   margin-top: 45px;
-  filter: drop-shadow(0px 0px 20px #00000010);
+  filter: drop-shadow(0 0 20px #00000010);
 }
 
-.generalView h2{
-  padding: 15px 0px 15px 30px;
+.generalView h2 {
+  padding: 15px 0 15px 30px;
 }
 
-.cItem h4{
+.cItem h4 {
   padding-top: 15px;
   font-size: 15px;
   color: #8C8C8C;
 }
 
-.cItem h3{
+.cItem h3 {
   font-size: 30px;
 }
 
@@ -52,96 +51,40 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-  
 }
 
-.campanhaIcon{
+.campanhaIcon {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 30px;
   width: 60px;
   height: 60px;
-  
   border-radius: 50%;
 }
 
-.campaign h2{
-  padding-top: 20px;
-  padding-bottom: 20px;
+.campaign h2 {
+  padding: 20px 0;
   font-size: 40px;
   color: #313131;
 }
 
-.campaign{
+.campaign {
   color: #313131;
 }
 
-.cardHeader{
-  display: flex;
-  align-items: center;
-  font-size: 11px;
-  background-color: #ffff;
-  border-radius: 10px;
-  padding: 10px 10px 10px 10px;
-  margin-bottom: 20px;
-}
-
-.cardHeader span:nth-child(1) {
-  margin-right: 30px;
-}
-
-.cardHeader span:nth-child(2) {
-  margin-right: 160px;
-}
-
-.cardHeader span:nth-child(3) {
-  margin-right: 130px;
-}
-
-.cardHeader span:nth-child(4) {
-  margin-right: 70px;
-}
-
-
-.campaignCard{
-  display: flex;
-  align-items: center;
-  font-size: 11px;
-  background-color: #ffff;
-  border-radius: 10px;
-  padding: 10px 10px 10px 10px;
-  margin-bottom: 5px;
-}
-
-.campaignCard span:nth-child(1) {
-  margin-right: 30px;
-}
-
-.campaignCard span:nth-child(2) {
-  margin-right: 10px;
-}
-
-.campaignCard span:nth-child(3) {
-  margin-right: 50px;
-}
-
-.campaignCard span:nth-child(4) {
-  margin-right: 90px;
-}
-
-.cCardInfo{
+.cCardInfo {
   padding: 20px;
   font-size: 15px;
-  background-color: #ffff;
+  background-color: #fff;
   border-radius: 10px;
-  filter: drop-shadow(0px 0px 20px #00000010);
+  filter: drop-shadow(0 0 20px #00000010);
 }
 
 .cardContainer {
   display: flex;
   flex-direction: column;
-  gap: 40px; 
+  gap: 40px;
 }
 
 .cLastSection {
@@ -160,8 +103,8 @@
   width: 100%;
 }
 
-.cLastSection.left,
-.cLastSection.right {
+.cLastSectionLeft,
+.cLastSectionRight {
   font-size: 17px;
   color: #8C8C8C;
   width: 50%;
@@ -170,23 +113,48 @@
   justify-content: center;
 }
 
-.cardCounter{
+.cardCounter {
   color: #313131;
-  font-size: 160%
-
+  font-size: 160%;
 }
 
-.cLastSection span{
-  padding-left:5px;
+.cLastSection span {
+  padding-left: 5px;
 }
 
-.cLastGroup{
-  padding: 20px 0px 20px 0px;
+.cLastGroup {
+  padding: 20px 0;
 }
 
-.campaignLast h2{
+.campaignLast h2 {
   padding-bottom: 20px;
 }
 
+/* Classes para o botão de refresh */
+.campaignHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
+.btnRefresh {
+  background: #4299e1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
 
+.btnRefresh:hover:not(:disabled) {
+  background: #3182ce;
+  transform: translateY(-2px);
+}
+
+.btnRefresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
