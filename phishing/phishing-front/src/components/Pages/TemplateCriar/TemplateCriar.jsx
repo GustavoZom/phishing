@@ -22,8 +22,8 @@ function TemplateCriar() {
   const [formData, setFormData] = useState({
     name: '',
     desc: '',
-    code: '',
-    preview_data: '' // Novo campo para salvar o preview
+    code: ''
+    // REMOVER preview_data do estado inicial
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -48,24 +48,16 @@ function TemplateCriar() {
   const handleEditorChange = (e) => {
     const htmlContent = e.target.value;
     handleInputChange('code', htmlContent);
-    // Atualizar preview em tempo real
-    updatePreviewData(htmlContent);
   };
 
-  const updatePreviewData = (htmlContent) => {
-    // Criar o preview com as variáveis substituídas
-    const previewHtml = htmlContent
+  // Função para gerar preview em tempo real (apenas para exibição)
+  const generatePreview = (htmlContent) => {
+    return htmlContent
       .replace(/{{title}}/g, previewVariables.title)
       .replace(/{{body}}/g, previewVariables.body)
       .replace(/{{name}}/g, previewVariables.name)
       .replace(/{{link}}/g, '#')
       .replace(/{{button_text}}/g, previewVariables.button_text);
-
-    // Salvar no formData
-    setFormData(prev => ({
-      ...prev,
-      preview_data: previewHtml
-    }));
   };
 
   const handlePreviewVariableChange = (variable, value) => {
@@ -73,11 +65,6 @@ function TemplateCriar() {
       ...prev,
       [variable]: value
     }));
-    
-    // Atualizar preview quando variáveis mudarem
-    if (formData.code) {
-      updatePreviewData(formData.code);
-    }
   };
 
   const handleTemplateSelect = (template) => {
@@ -96,14 +83,10 @@ function TemplateCriar() {
       setFormData({
         name: template.name || '',
         desc: template.description || '',
-        code: editorContent,
-        preview_data: template.preview_data || ''
+        code: editorContent
+        // REMOVER preview_data
       });
 
-      // Se existir preview_data, extrair as variáveis
-      if (template.preview_data) {
-        // Aqui você pode extrair os valores padrão do preview se quiser
-      }
     } catch (err) {
       console.error('Erro ao carregar template:', err);
       setError('Erro ao carregar dados do template');
@@ -142,28 +125,26 @@ function TemplateCriar() {
       setError('');
       setSuccess('');
 
-      // Garantir que o preview_data está atualizado
-      const finalPreviewData = formData.preview_data || formData.code;
-
+      // REMOVER preview_data do envio
       if (selectedTemplate) {
         await templateService.updateTemplate(selectedTemplate.id, {
           name: formData.name,
           description: formData.desc || '',
-          code: formData.code,
-          preview_data: finalPreviewData // Salvar o preview
+          code: formData.code
+          // REMOVER preview_data
         });
         setSuccess('Template atualizado com sucesso!');
       } else {
         await templateService.createTemplate({
           name: formData.name,
           description: formData.desc || '',
-          code: formData.code,
-          preview_data: finalPreviewData // Salvar o preview
+          code: formData.code
+          // REMOVER preview_data
         });
         setSuccess('Template criado com sucesso!');
       }
 
-      setFormData({ name: '', desc: '', code: '', preview_data: '' });
+      setFormData({ name: '', desc: '', code: '' }); // REMOVER preview_data
       setSelectedTemplate(null);
       setRefreshTrigger(prev => prev + 1);
       
@@ -207,12 +188,11 @@ function TemplateCriar() {
       ...prev,
       code: baseTemplate.trim()
     }));
-    updatePreviewData(baseTemplate.trim());
     setError('');
   };
 
   const renderPreview = () => {
-    if (!formData.preview_data && !formData.code) {
+    if (!formData.code) {
       return (
         <div className="previewPlaceholder">
           O preview do template será exibido aqui quando você criar o conteúdo
@@ -220,7 +200,7 @@ function TemplateCriar() {
       );
     }
 
-    const previewHtml = formData.preview_data || formData.code;
+    const previewHtml = generatePreview(formData.code);
 
     return (
       <div 
@@ -369,7 +349,7 @@ function TemplateCriar() {
                     <div className="variableInput full-width">
                       <label>Corpo do Email:</label>
                       <textarea 
-                        value={previewVariables.body.replace(/<[^>]*>/g, '')} // Remover HTML para edição
+                        value={previewVariables.body.replace(/<[^>]*>/g, '')}
                         onChange={(e) => handlePreviewVariableChange('body', `<p>${e.target.value}</p>`)}
                         placeholder="Conteúdo do email"
                         rows="3"
@@ -421,7 +401,7 @@ function TemplateCriar() {
               <button 
                 className="btnCancelar" 
                 onClick={() => {
-                  setFormData({ name: '', desc: '', code: '', preview_data: '' });
+                  setFormData({ name: '', desc: '', code: '' }); // REMOVER preview_data
                   setPreviewVariables({
                     title: 'Título do Email',
                     body: '<p>Este é o conteúdo principal do email que será personalizado para cada campanha.</p>',
