@@ -88,3 +88,4 @@ class TemplateId(Resource):
             return abort(400, message='Template cant be deleted', error={'template':'This template is related to a campaign.'})
         except:
             return abort(500, message='Coudnt delete template', error='Internal Error')
+

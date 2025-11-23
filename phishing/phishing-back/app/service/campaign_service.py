@@ -159,3 +159,4 @@ def run_campaign(campaign_id:int):
             scheduler.remove_job(f'camp_{campaign_id}_start')
         except:
             pass
+
