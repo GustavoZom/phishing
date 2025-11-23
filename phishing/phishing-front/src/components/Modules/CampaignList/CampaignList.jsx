@@ -15,14 +15,12 @@ const DEFAULT_STATUS_CONFIG = {
   borderColor: '#666'
 };
 
-// Seleção campanhas da lista
 const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) => {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // useCallback corrigido - estava faltando as dependências
   const handleCampaignClick = useCallback((campaign) => {
     navigate(`/campanha/${campaign.id}`);
 
@@ -31,7 +29,6 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
     }
   }, [navigate, onCampaignSelect]);
 
-  // Carregamento de campanhas
   const loadCampaigns = useCallback(async () => {
     try {
       setLoading(true);
@@ -46,7 +43,6 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
       setCampaigns(safeCampaigns);
       console.log('Campanhas carregadas:', safeCampaigns.length);
     
-    // Erro de carregamento
     } catch (err) {
       console.error('Erro ao carregar campanhas:', err);
       setError(err?.message || 'Erro ao carregar campanhas');
@@ -54,7 +50,7 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
     } finally {
       setLoading(false);
     }
-  }, []); // useCallback correto aqui
+  }, []);
 
   useEffect(() => {
     loadCampaigns();
@@ -82,12 +78,10 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
     );
   };
 
-  // Auxílio na renderização das células
   const renderCellContent = (content, fallback = 'N/A') => {
     return content || fallback;
   };
 
-  // Estado Loading
   const LoadingState = () => (
     <div className="campaignListContainer">
       <div className="loading-state">
@@ -97,14 +91,12 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
     </div>
   );
 
-  // Estado Empty - CORREÇÃO: faltava o return
   const EmptyState = () => (
     <div className="empty-state">
       {error ? 'Erro ao carregar campanhas' : 'Nenhuma campanha encontrada'}
     </div>
   );
 
-  // Mensagem de erro
   const ErrorMessage = () => (
     error && (
       <div className="error-message">
@@ -113,7 +105,6 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
     )
   );
 
-  // Header
   const ListHeader = () => (
     <div className="cardListHeader">
       <span>Id</span>
@@ -124,7 +115,6 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
     </div>
   );
 
-  // Item da campanha
   const CampaignItem = ({ campaign }) => (
     <div
       key={campaign.id}

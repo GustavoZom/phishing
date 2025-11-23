@@ -1,3 +1,4 @@
+// src/Modules/CampaignListInfo/CampaignListInfo.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { campaignService } from '../../services/campaignService';
@@ -45,7 +46,7 @@ function CampaignListInfo({ filters, refreshTrigger }) {
 
     const formatTime = (timeString) => {
         if (!timeString) return 'N/A';
-        return timeString.substring(0, 5); // Formato HH:MM
+        return timeString.substring(0, 5);
     };
 
     const getStatusBadge = (status) => {

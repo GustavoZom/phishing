@@ -49,7 +49,7 @@ function CampanhaInfo(){
             <div className="mainContainer">
                 <div className="cInfoContainer">
                     <div className="error-message">
-                        {error || 'Campanha não encontrada'}
+                        {error || 'Campanha nao encontrada'}
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@ function CampanhaInfo(){
             <div className="cInfoContainer">
                 <div className="campanhaTitle">
                     <h2>Campanhas</h2>
-                    <span>Nova Campanha</span>
+                    <span>Detalhes da Campanha</span>
                 </div>
                 
                 <div className="cSectionContainer">
@@ -71,21 +71,21 @@ function CampanhaInfo(){
                         </div>
 
                         <div className="userList">
-                            <UserList />
+                            <UserList campaignId={id} />
                         </div>
                     </div>
                     
                     <div className="cInfoSection right">
-                        <Conversao />
+                        <Conversao campaignId={id} />
                         <div className="emailTemplate">
                             <h2>E-mail</h2>
                             <div className="sectionBox previewBox">
-                                <h3>Prévia do E-mail</h3>
+                                <h3>Previa do E-mail</h3>
                                 <div className="emailPreview">
-                                    <h2 style={{ color: "#e50914" }}>{campaign.title_text || "TÍTULO DO E-MAIL"}</h2>
+                                    <h2 style={{ color: "#e50914" }}>{campaign.title_text || "TITULO DO E-MAIL"}</h2>
                                     <h3>{campaign.subject_text || "Assunto do e-mail"}</h3>
                                     <p>
-                                        {campaign.body_text || "Conteúdo do e-mail será exibido aqui..."}
+                                        {campaign.body_text || "Conteudo do e-mail sera exibido aqui..."}
                                     </p>
                                     <button className="btn-preview">
                                         {campaign.button_text || "CLIQUE AQUI"}
