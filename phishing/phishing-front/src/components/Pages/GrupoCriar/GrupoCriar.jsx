@@ -140,17 +140,14 @@ function GrupoCriar() {
       </div>
       
       <div className="gCriarContainer">
-         <div className="campanhaTitle">
+        <div className="campanhaTitle">
           <h2>Grupos</h2>
-          <div>
-            <button 
-              className="btn-voltar-grupo"
-              onClick={() => navigate('/grupoGerencia')}
-            >
-              Voltar para Grupos
-            </button>
-            <span className="btn-novo-grupo">Novo Grupo</span>
-          </div>
+          <button 
+            className="btn-voltar-grupo"
+            onClick={() => navigate('/grupoGerencia')}
+          >
+            Voltar para Grupos
+          </button>
         </div>
         
         <div className="gSectionContainer">

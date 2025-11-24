@@ -23,7 +23,6 @@ const GroupList = ({ onGroupSelect, selectedGroupId, refreshTrigger }) => {
       console.log('Carregando grupos com filtros:', newFilters);
       const response = await groupService.getGroups(newFilters);
       
-      //Pega os items
       const groupsData = response.items || response;
       setGroups(Array.isArray(groupsData) ? groupsData : []);
       
@@ -108,7 +107,6 @@ const GroupList = ({ onGroupSelect, selectedGroupId, refreshTrigger }) => {
       <div className="cardListHeader">
         <span>Id</span>
         <span>Nome</span>
-        <span>Descrição</span>
         <span></span>
       </div>
 
@@ -126,7 +124,6 @@ const GroupList = ({ onGroupSelect, selectedGroupId, refreshTrigger }) => {
             >
               <span>{group.id}</span>
               <span>{group.name}</span>
-              <span>{group.description || 'Sem descrição'}</span>
               <span>›</span>
             </div>
           ))

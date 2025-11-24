@@ -43,50 +43,33 @@ function TemplateList({ templates, loading, onTemplateSelect, selectedTemplateId
   }
 
   return (
-    <table className="template-list">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Nome</th>
-          <th>Tipo</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {templates.map((template) => (
-          <tr 
-            key={template.id} 
-            onClick={() => onTemplateSelect && onTemplateSelect(template)}
-            style={{ 
-              backgroundColor: selectedTemplateId === template.id ? '#e6f2ff' : 'transparent',
-              cursor: 'pointer'
-            }}
-          >
-            <td>{template.id}</td>
-            <td>{template.name}</td>
-            <td>{template.tipo || 'Personalizado'}</td>
-            <td>
-              <button 
-                className="btn-delete"
-                onClick={(e) => handleDelete(template.id, e)}
-                disabled={deletingId === template.id}
-                style={{
-                  padding: '4px 8px',
-                  backgroundColor: '#ff4444',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                {deletingId === template.id ? 'Excluindo...' : 'Excluir'}
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="template-list-container">
+      <div className="template-list-header">
+        <span>Id</span>
+        <span>Nome</span>
+        <span></span>
+      </div>
+      
+      <div className="template-list">
+        {templates.length === 0 ? (
+          <div className="empty-state">
+            {error ? 'Erro ao carregar templates' : 'Nenhum template encontrado'}
+          </div>
+        ) : (
+          templates.map((template) => (
+            <div
+              key={template.id}
+              className={`template-item ${selectedTemplateId === template.id ? 'selected' : ''}`}
+              onClick={() => handleTemplateClick(template)}
+            >
+              <span>{template.id}</span>
+              <span>{template.name}</span>
+              <span>›</span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
 

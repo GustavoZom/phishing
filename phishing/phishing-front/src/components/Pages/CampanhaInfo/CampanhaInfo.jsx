@@ -43,6 +43,11 @@ function CampanhaInfo(){
         }
     };
 
+    // Função para verificar se a campanha está inativa
+    const isCampaignInactive = () => {
+        return campaign && campaign.status === 'i';
+    };
+
     if (loading) {
         return (
             <div className="mainContainer">
@@ -70,6 +75,9 @@ function CampanhaInfo(){
 
     return (
         <div className="mainContainer">
+            <div className="hSidenav">
+            </div>
+            
             <div className="cInfoContainer">
                 <div className="campanhaTitle">
                     <h2>Campanhas</h2>
@@ -88,7 +96,11 @@ function CampanhaInfo(){
                     </div>
                     
                     <div className="cInfoSection right">
-                        <Conversao campaignId={id} />
+                        {/* Mostrar Conversao apenas se a campanha NÃO estiver inativa */}
+                        {!isCampaignInactive() && (
+                            <Conversao campaignId={id} />
+                        )}
+                        
                         <div className="emailTemplate">
                             <h2>E-mail</h2>
                             <div className="sectionBox previewBox">

@@ -63,14 +63,14 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
       <span
         className="status-badge"
         style={{ 
-          border: `1px solid ${config.borderColor}`,
-          color: `${config.color}`,
+          backgroundColor: config.borderColor,
+          color: 'white',
           padding: '4px 10px',
           borderRadius: '12px',
-          fontSize: '13px',
+          fontSize: '12px',
+          fontWeight: '600',
           whiteSpace: 'nowrap',
-          justifySelf: 'start',
-          alignSelf: 'center'
+          textAlign: 'center'
         }}
       >
         {config.text}
@@ -106,7 +106,7 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
   );
 
   const ListHeader = () => (
-    <div className="cardListHeader">
+    <div className="campaign-list-header">
       <span>Id</span>
       <span>Nome</span>
       <span>Grupo</span>
@@ -118,14 +118,13 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
   const CampaignItem = ({ campaign }) => (
     <div
       key={campaign.id}
-      className={`campaignListCard ${selectedCampaignId === campaign.id ? 'selected' : ''}`}
+      className={`campaign-item ${selectedCampaignId === campaign.id ? 'selected' : ''}`}
       onClick={() => handleCampaignClick(campaign)}
-      style={{ cursor: 'pointer' }}
     >
-      <span>{renderCellContent(campaign.id)}</span>
-      <span>{renderCellContent(campaign.name)}</span>
-      <span>{renderCellContent(campaign.group?.name)}</span>
-      <span>{renderCellContent(campaign.template?.name)}</span>
+      <span className="campaign-id">{renderCellContent(campaign.id)}</span>
+      <span className="campaign-name">{renderCellContent(campaign.name)}</span>
+      <span className="campaign-group">{renderCellContent(campaign.group?.name)}</span>
+      <span className="campaign-template">{renderCellContent(campaign.template?.name)}</span>
       {getStatusBadge(campaign.status)}
     </div>
   );
@@ -135,12 +134,11 @@ const CampaignList = ({ onCampaignSelect, selectedCampaignId, refreshTrigger }) 
   }
 
   return (
-    <div className="campaignListContainer">
+    <div className="campaign-list-container">
       <ErrorMessage />
-
       <ListHeader />
-
-      <div className="campaignList">
+      
+      <div className="campaign-list">
         {campaigns.length === 0 ? (
           <EmptyState />
         ) : (

@@ -40,11 +40,10 @@ function TemplateDetalhes({ template, onTemplateDeleted, onRefresh }) {
     <div className="gDetailsContainer">
       <h3>Detalhes do Template</h3>
       <div className="gDetailsCard">
-        <p><strong>Id:</strong> {template.id}</p>
-        <p><strong>Nome:</strong> {template.name}</p>
-        <p><strong>Descrição:</strong> {template.description || 'Sem descrição'}</p>
-        {/* REMOVIDO: Data de Criação */}
-        <p><strong>Criador:</strong> {template.creator_id === 0 ? 'Admin' : `Usuário ${template.creator_id}`}</p>
+        <p><strong>Id:</strong> <span>{template.id}</span></p>
+        <p><strong>Nome:</strong> <span>{template.name}</span></p>
+        <p><strong>Descrição:</strong> <span>{template.description || 'Sem descrição'}</span></p>
+        <p><strong>Criador:</strong> <span>{template.creator_id === 0 ? 'Admin' : `Usuário ${template.creator_id}`}</span></p>
         
         <div className="template-actions">
           <button 

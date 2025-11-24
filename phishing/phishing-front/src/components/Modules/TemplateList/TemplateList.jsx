@@ -23,7 +23,6 @@ const TemplateList = ({ onTemplateSelect, selectedTemplateId, refreshTrigger }) 
       console.log('Carregando templates com filtros:', newFilters);
       const response = await templateService.getTemplates(newFilters);
       
-      //Pega os items
       const templatesData = response.items || response;
       setTemplates(Array.isArray(templatesData) ? templatesData : []);
       
@@ -108,7 +107,6 @@ const TemplateList = ({ onTemplateSelect, selectedTemplateId, refreshTrigger }) 
       <div className="cardListHeader">
         <span>Id</span>
         <span>Nome</span>
-        <span>Descrição</span>
         <span></span>
       </div>
 
@@ -126,7 +124,6 @@ const TemplateList = ({ onTemplateSelect, selectedTemplateId, refreshTrigger }) 
             >
               <span>{template.id}</span>
               <span>{template.name}</span>
-              <span>{template.description || 'Sem descrição'}</span>
               <span>›</span>
             </div>
           ))
