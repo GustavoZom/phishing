@@ -8,6 +8,10 @@
     height: 100vh;
 }
 
+a{
+  text-decoration: none;
+}
+
 body {
   font-family: 'Istok Web', sans-serif;
   font-size: 22px;

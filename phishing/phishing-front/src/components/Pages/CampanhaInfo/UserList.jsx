@@ -72,13 +72,13 @@ function UserList({ campaignId, groupMembers }){
     const getStatusBadge = (interacted) => {
         if (interacted) {
             return (
-                <span className="clicked-yes" title="Usuario clicou no link">
+                <span className="clicked-no" title="Usuario clicou no link">
                     Sim
                 </span>
             );
         } else {
             return (
-                <span className="clicked-no" title="Usuario nao clicou no link">
+                <span className="clicked-yes" title="Usuario nao clicou no link">
                     Nao
                 </span>
             );
@@ -89,12 +89,11 @@ function UserList({ campaignId, groupMembers }){
         return (
             <>
                 <div className="userListHeader">
-                    <span>ID Usuario</span>
+                    <span>Id</span>
                     <span>Nome</span>
                     <span>E-mail</span>
                     <span>Clicou</span>
                     <span>Data do Click</span>
-                    <span>Ações</span>
                 </div>
                 <div className="userListContainer">
                     <div className="loading-state">
@@ -110,12 +109,11 @@ function UserList({ campaignId, groupMembers }){
         return (
             <>
                 <div className="userListHeader">
-                    <span>ID Usuario</span>
+                    <span>Id</span>
                     <span>Nome</span>
                     <span>E-mail</span>
                     <span>Clicou</span>
                     <span>Data do Click</span>
-                    <span>Ações</span>
                 </div>
                 <div className="userListContainer">
                     <div className="error-message">
@@ -129,12 +127,11 @@ function UserList({ campaignId, groupMembers }){
     return (
         <>
             <div className="userListHeader">
-                <span>ID Usuario</span>
+                <span>Id</span>
                 <span>Nome</span>
                 <span>E-mail</span>
                 <span>Clicou</span>
                 <span>Data do Click</span>
-                <span>Ações</span>
             </div>
 
             <div className="userListContainer">
@@ -145,20 +142,11 @@ function UserList({ campaignId, groupMembers }){
                 ) : (
                     users.map((user) => (
                         <div key={user.id} className="userListItem">
-                            <span>{user.target?.id || 'N/A'}</span>
+                            <span>{user.target_id || 'N/A'}</span>
                             <span>{user.target?.name || 'N/A'}</span>
                             <span>{user.target?.email || 'N/A'}</span>
                             <span>{getStatusBadge(user.interacted)}</span>
-                            <span>{user.interacted ? formatDate(user.interaction_date) : 'N/A'}</span>
-                            <div className="member-actions">
-                                <button 
-                                    className="btn-delete-member"
-                                    onClick={() => handleDeleteMember(user.target.id)}
-                                    title="Excluir membro"
-                                >
-                                    Excluir
-                                </button>
-                            </div>
+                            <span>{user.interacted ? formatDate(user.interaction_date) : '-'}</span>
                         </div>
                     ))
                 )}

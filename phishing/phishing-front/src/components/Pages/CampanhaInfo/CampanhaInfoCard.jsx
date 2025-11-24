@@ -25,9 +25,9 @@ function CampanhaInfoCard({ campaign }) {
 
     const getStatusText = (status) => {
         const statusMap = {
-            'a': 'Campanha ativa',
-            'i': 'Campanha inativa', 
-            'f': 'Campanha finalizada'
+            'a': 'Ativa',
+            'i': 'Anativa', 
+            'f': 'Finalizada'
         };
         return statusMap[status] || 'Status desconhecido';
     };

@@ -5,9 +5,9 @@ import Piechart from './Piechart';
 
 // Constantes para melhor manutenção
 const STATUS_CONFIG = {
-  'active': { text: 'Ativo', color: '#26BAB3' },
-  'finished': { text: 'Finalizado', color: '#BA4D26' },
-  'inactive': { text: 'Inativo', color: '#666' }
+  'a': { text: 'Ativa', color: '#26BAB3' },
+  'f': { text: 'Finalizada', color: '#BA4D26' },
+  'i': { text: 'Inativa', color: '#666' }
 };
 
 const DEFAULT_STATUS_CONFIG = { text: 'Desconhecido', color: '#666' };

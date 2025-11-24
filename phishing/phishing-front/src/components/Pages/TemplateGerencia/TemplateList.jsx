@@ -5,6 +5,13 @@ import './templatesGerencia.css';
 function TemplateList({ templates, loading, onTemplateSelect, selectedTemplateId, onRefresh }) {
   const [deletingId, setDeletingId] = useState(null);
 
+  const handleTemplateClick = (template) => {
+    if (onTemplateSelect) {
+      onTemplateSelect(template);
+    }
+  };
+
+
   const handleDelete = async (templateId, event) => {
     event.stopPropagation();
     

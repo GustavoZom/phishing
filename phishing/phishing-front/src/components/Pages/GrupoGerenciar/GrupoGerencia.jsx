@@ -203,9 +203,6 @@ function GrupoGerencia() {
                       <div className="infoNome">
                         <span className="label">{selectedGroup.name}</span>
                       </div>
-                      <div className="infoStatus">
-                        <span className="status-badge">Sem campanha</span>
-                      </div>
                     </div>
                     
                     <div className="infoDescricao">
@@ -218,9 +215,6 @@ function GrupoGerencia() {
                   <div className="membrosHeader">
                     <h3>Membros do Grupo</h3>
                     <div className="membrosHeaderActions">
-                      <button className="btn-csv" title="Exportar CSV">
-                        CSV
-                      </button>
                       <button 
                         className="btn-add-member"
                         onClick={handleAddMember}
@@ -232,7 +226,7 @@ function GrupoGerencia() {
                   </div>
                   
                   <div className="membrosListContainer">
-                    <div className="membrosListHeader">
+                    <div className="membrosListHeaderG">
                       <span>Id</span>
                       <span>Nome</span>
                       <span>E-mail</span>
@@ -248,7 +242,7 @@ function GrupoGerencia() {
                 <div className="formActions">
                   <button className="btn-editar">Editar Grupo</button>
                   <button 
-                    className="btn-excluir"
+                    className="btn-delete"
                     onClick={handleDeleteGroup}
                   >
                     Excluir Grupo

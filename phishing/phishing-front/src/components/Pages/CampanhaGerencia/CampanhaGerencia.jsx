@@ -149,9 +149,9 @@ function CampanhaGerencia() {
                             onChange={(e) => handleFilterChange('status', e.target.value)}
                         >
                             <option value="">Status</option>
-                            <option value="a">Ativo</option>
-                            <option value="i">Inativo</option>
-                            <option value="f">Finalizado</option>
+                            <option value="a">Ativa</option>
+                            <option value="i">Inativa</option>
+                            <option value="f">Finalizada</option>
                         </select>
                     </div>
 

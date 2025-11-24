@@ -51,9 +51,9 @@ function CampaignListInfo({ filters, refreshTrigger }) {
 
     const getStatusBadge = (status) => {
         const statusConfig = {
-            'a': { text: 'Ativo', color: '#26BAB3', borderColor: '#26BAB3' },
-            'i': { text: 'Inativo', color: '#B8B8B8', borderColor: '#B8B8B8' },
-            'f': { text: 'Finalizado', color: '#BA4D26', borderColor: '#BA4D26' }
+            'a': { text: 'Ativa', color: '#26BAB3', borderColor: '#26BAB3' },
+            'i': { text: 'Inativa', color: '#B8B8B8', borderColor: '#B8B8B8' },
+            'f': { text: 'Finalizad', color: '#BA4D26', borderColor: '#BA4D26' }
         };
         
         const config = statusConfig[status] || { text: 'Desconhecido', color: '#666', borderColor: '#666' };

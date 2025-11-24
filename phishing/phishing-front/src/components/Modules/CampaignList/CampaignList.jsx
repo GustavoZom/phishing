@@ -4,9 +4,9 @@ import { campaignService } from '../../services/campaignService';
 import './campaignList.css';
 
 const STATUS_CONFIG = {
-  'active': { text: 'Ativo', color: '#26BAB3', borderColor: '#26BAB3' },
-  'finished': { text: 'Finalizado', color: '#BA4D26', borderColor: '#BA4D26' },
-  'inactive': { text: 'Inativo', color: '#666', borderColor: '#666' },
+  'a': { text: 'Ativa', color: '#26BAB3', borderColor: '#26BAB3' },
+  'f': { text: 'Finalizada', color: '#BA4D26', borderColor: '#BA4D26' },
+  'i': { text: 'Inativa', color: '#666', borderColor: '#666' },
 };
 
 const DEFAULT_STATUS_CONFIG = {

@@ -5,6 +5,7 @@ import Conversao from "./Conversao";
 import UserList from "./UserList";
 import { groupService } from '../../services/groupService';
 import { campaignService } from '../../services/campaignService';
+import { useNavigate } from 'react-router-dom';
 import './campanhaInfo.css';
 
 function CampanhaInfo(){
@@ -13,6 +14,7 @@ function CampanhaInfo(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [groupMembers, setGroupMembers] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (id) {
@@ -81,7 +83,12 @@ function CampanhaInfo(){
             <div className="cInfoContainer">
                 <div className="campanhaTitle">
                     <h2>Campanhas</h2>
-                    <span>Detalhes da Campanha</span>
+                              <button 
+                                className="btn-voltar-grupo"
+                                onClick={() => navigate('/campanhaGerencia')}
+                                >
+                                Voltar para Campanhas
+                                </button>
                 </div>
                 
                 <div className="cSectionContainer">

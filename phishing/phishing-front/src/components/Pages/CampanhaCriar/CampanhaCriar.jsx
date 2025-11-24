@@ -145,7 +145,7 @@ function CampanhaCriar() {
     // Gerar preview dinamicamente do código do template
     const previewHtml = selectedTemplate.code
       .replace(/{{title}}/g, formData.title_text || 'Título do Email')
-      .replace(/{{body}}/g, formData.body_text || 'Conteúdo do email...')
+      .replace(/{{body_text}}/g, formData.body_text || 'Conteúdo do email...')
       .replace(/{{name}}/g, 'Nome do Usuário')
       .replace(/{{link}}/g, '#')
       .replace(/{{button_text}}/g, formData.button_text || 'Clique Aqui');
@@ -340,7 +340,7 @@ function CampanhaCriar() {
         {/* Botões de Ação */}
         <div className="actionButtons">
           <button 
-            className="btnCancel" 
+            className="btn-cancel" 
             onClick={() => {
               setFormData({
                 name: '',
@@ -364,7 +364,7 @@ function CampanhaCriar() {
             Cancelar
           </button>
           <button 
-            className="btnCreate" 
+            className="btn-create" 
             onClick={handleCreateCampaign}
             disabled={loading}
           >

@@ -149,7 +149,7 @@
   overflow: hidden;
 }
 
-.membrosListHeader {
+.membrosListHeaderG {
   display: grid;
   grid-template-columns: 60px 1fr 1fr 80px;
   gap: 15px;

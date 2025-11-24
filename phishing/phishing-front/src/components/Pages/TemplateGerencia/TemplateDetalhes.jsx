@@ -46,12 +46,7 @@ function TemplateDetalhes({ template, onTemplateDeleted, onRefresh }) {
         <p><strong>Criador:</strong> <span>{template.creator_id === 0 ? 'Admin' : `Usuário ${template.creator_id}`}</span></p>
         
         <div className="template-actions">
-          <button 
-            className="btn-editar-template"
-            onClick={() => {/* lógica de edição */}}
-          >
-            Editar Template
-          </button>
+
           <button 
             className="btn-delete"
             onClick={handleDelete}
