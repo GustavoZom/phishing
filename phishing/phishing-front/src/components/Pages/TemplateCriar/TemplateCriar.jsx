@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Editor, { 
-  Toolbar,
-  BtnBold, 
-  BtnItalic, 
-  BtnUnderline,
-  BtnStrikeThrough,
+  BtnBold,
   BtnBulletList,
-  BtnUndo,
-  BtnRedo,
+  BtnClearFormatting,
+  BtnItalic,
   BtnLink,
-  Separator
+  BtnNumberedList,
+  BtnRedo,
+  BtnStrikeThrough,
+  BtnStyles,
+  BtnUnderline,
+  BtnUndo,
+  HtmlButton,
+  Separator,
+  Toolbar,
 } from 'react-simple-wysiwyg';
 import TemplateList from '../../Modules/TemplateList/TemplateList';
 import { templateService } from '../../services/templateService';
@@ -305,9 +309,14 @@ function TemplateCriar() {
                       <BtnUnderline />
                       <BtnStrikeThrough />
                       <Separator />
+                      <BtnNumberedList />
                       <BtnBulletList />
                       <Separator />
                       <BtnLink />
+                      <BtnClearFormatting />
+                      <HtmlButton />
+                      <Separator />
+                      <BtnStyles />
                     </Toolbar>
                   </Editor>
                 </div>
