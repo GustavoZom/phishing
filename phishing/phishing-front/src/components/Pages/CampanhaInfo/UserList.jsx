@@ -1,9 +1,9 @@
-// src/Pages/CampanhaInfo/UserList.jsx
 import React, { useState, useEffect } from 'react';
 import { campaignService } from '../../services/campaignService';
+import { groupService } from '../../services/groupService';
 import "./campanhaInfo.css";
 
-function UserList({ campaignId }){
+function UserList({ campaignId, groupMembers }){
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -11,8 +11,18 @@ function UserList({ campaignId }){
     useEffect(() => {
         if (campaignId) {
             loadCampaignUsers();
+        } else if (groupMembers && groupMembers.length > 0) {
+            setUsers(groupMembers.map(member => ({
+                id: member.id,
+                target: member,
+                interacted: false,
+                interaction_date: null
+            })));
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
-    }, [campaignId]);
+    }, [campaignId, groupMembers]);
 
     const loadCampaignUsers = async () => {
         try {
@@ -37,6 +47,25 @@ function UserList({ campaignId }){
             });
         } catch {
             return 'Data invalida';
+        }
+    };
+
+    const handleDeleteMember = async (memberId) => {
+        if (!window.confirm('Tem certeza que deseja excluir este membro?')) {
+            return;
+        }
+
+        try {
+            await groupService.deleteMember(memberId);
+            // Recarregar a lista
+            if (campaignId) {
+                loadCampaignUsers();
+            } else {
+                setUsers(prev => prev.filter(user => user.target.id !== memberId));
+            }
+        } catch (error) {
+            console.error('Erro ao excluir membro:', error);
+            alert('Erro ao excluir membro: ' + error.message);
         }
     };
 
@@ -65,6 +94,7 @@ function UserList({ campaignId }){
                     <span>E-mail</span>
                     <span>Clicou</span>
                     <span>Data do Click</span>
+                    <span>Ações</span>
                 </div>
                 <div className="userListContainer">
                     <div className="loading-state">
@@ -85,6 +115,7 @@ function UserList({ campaignId }){
                     <span>E-mail</span>
                     <span>Clicou</span>
                     <span>Data do Click</span>
+                    <span>Ações</span>
                 </div>
                 <div className="userListContainer">
                     <div className="error-message">
@@ -103,6 +134,7 @@ function UserList({ campaignId }){
                 <span>E-mail</span>
                 <span>Clicou</span>
                 <span>Data do Click</span>
+                <span>Ações</span>
             </div>
 
             <div className="userListContainer">
@@ -118,6 +150,15 @@ function UserList({ campaignId }){
                             <span>{user.target?.email || 'N/A'}</span>
                             <span>{getStatusBadge(user.interacted)}</span>
                             <span>{user.interacted ? formatDate(user.interaction_date) : 'N/A'}</span>
+                            <div className="member-actions">
+                                <button 
+                                    className="btn-delete-member"
+                                    onClick={() => handleDeleteMember(user.target.id)}
+                                    title="Excluir membro"
+                                >
+                                    Excluir
+                                </button>
+                            </div>
                         </div>
                     ))
                 )}

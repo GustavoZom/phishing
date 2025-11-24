@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GroupList from '../../Modules/GroupList/GroupList';
+import { useNavigate } from 'react-router-dom';
 import { groupService } from '../../services/groupService';
 import './grupoCriar.css';
 
@@ -20,11 +21,20 @@ function GrupoCriar() {
     person_code: ''
   });
 
+  const navigate = useNavigate();
+  
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+  };
+
+  const handleGroupSelect = (group) => {
+    setFormData({
+      name: group.name,
+      desc: group.description || ''
+    });
   };
 
   const handleAddMember = () => {
@@ -40,9 +50,8 @@ function GrupoCriar() {
       return;
     }
 
-    // Adicionar membro à lista local
     const newMember = {
-      id: Date.now(), // ID temporário para a lista local
+      id: Date.now(),
       name: memberForm.name,
       email: memberForm.email,
       person_code: memberForm.person_code
@@ -68,9 +77,6 @@ function GrupoCriar() {
       setError('');
       setSuccess('');
 
-      console.log('Criando grupo:', formData);
-      
-      // Criar grupo com membros
       await groupService.createGroup({
         name: formData.name,
         description: formData.desc || '',
@@ -121,7 +127,7 @@ function GrupoCriar() {
             onClick={() => handleRemoveMember(member.id)}
             title="Remover membro"
           >
-            🗑️
+            Remover
           </button>
         </div>
       </div>
@@ -131,15 +137,27 @@ function GrupoCriar() {
   return (
     <div className="mainContainer">
       <div className="gCriarContainer">
-        <div className="campanhaTitle">
+         <div className="campanhaTitle">
           <h2>Grupos</h2>
-          <span className="btn-novo-grupo">Novo Grupo</span>
+          <div>
+            <button 
+              className="btn-voltar-grupo"
+              onClick={() => navigate('/grupoGerencia')}
+            >
+              Voltar para Grupos
+            </button>
+            <span className="btn-novo-grupo">Novo Grupo</span>
+          </div>
         </div>
         
         <div className="gSectionContainer">
           <div className="gCriarSection left">
             <div className="userList">
-              <GroupList refreshTrigger={refreshTrigger} />
+              <GroupList 
+                onGroupSelect={handleGroupSelect}
+                selectedGroupId={null}
+                refreshTrigger={refreshTrigger}
+              />
             </div>
           </div>
           
@@ -231,7 +249,6 @@ function GrupoCriar() {
         </div>
       </div>
 
-      {/* Modal para adicionar membro */}
       {showAddMemberModal && (
         <div className="modal-overlay">
           <div className="modal-content">

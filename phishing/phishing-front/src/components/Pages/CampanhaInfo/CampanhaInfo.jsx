@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import CampanhaInfoCard from "./CampanhaInfoCard";
 import Conversao from "./Conversao";
 import UserList from "./UserList";
+import { groupService } from '../../services/groupService';
 import { campaignService } from '../../services/campaignService';
 import './campanhaInfo.css';
 
@@ -11,6 +12,7 @@ function CampanhaInfo(){
     const [campaign, setCampaign] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [groupMembers, setGroupMembers] = useState([]);
 
     useEffect(() => {
         if (id) {
@@ -23,6 +25,16 @@ function CampanhaInfo(){
             setLoading(true);
             const campaignData = await campaignService.getCampaignById(id);
             setCampaign(campaignData);
+            
+            // Carregar membros do grupo mesmo para campanhas inativas
+            if (campaignData.group_id) {
+                try {
+                    const membersResponse = await groupService.getGroupMembers(campaignData.group_id);
+                    setGroupMembers(membersResponse.items || []);
+                } catch (err) {
+                    console.error('Erro ao carregar membros do grupo:', err);
+                }
+            }
         } catch (err) {
             console.error('Erro ao carregar campanha:', err);
             setError('Erro ao carregar dados da campanha');
@@ -71,7 +83,7 @@ function CampanhaInfo(){
                         </div>
 
                         <div className="userList">
-                            <UserList campaignId={id} />
+                            <UserList campaignId={id} groupMembers={groupMembers} />
                         </div>
                     </div>
                     

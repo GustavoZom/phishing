@@ -43,23 +43,20 @@ function TemplateDetalhes({ template, onTemplateDeleted, onRefresh }) {
         <p><strong>Id:</strong> {template.id}</p>
         <p><strong>Nome:</strong> {template.name}</p>
         <p><strong>Descrição:</strong> {template.description || 'Sem descrição'}</p>
-        <p><strong>Data de Criação:</strong> {new Date(template.created_at).toLocaleDateString('pt-BR')}</p>
+        {/* REMOVIDO: Data de Criação */}
         <p><strong>Criador:</strong> {template.creator_id === 0 ? 'Admin' : `Usuário ${template.creator_id}`}</p>
         
-        <div className="template-actions" style={{ marginTop: '20px', paddingTop: '15px', borderTop: '1px solid #eee' }}>
+        <div className="template-actions">
+          <button 
+            className="btn-editar-template"
+            onClick={() => {/* lógica de edição */}}
+          >
+            Editar Template
+          </button>
           <button 
             className="btn-delete"
             onClick={handleDelete}
             disabled={deleting}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#ff4444',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              width: '100%'
-            }}
           >
             {deleting ? 'Excluindo...' : 'Excluir Template'}
           </button>

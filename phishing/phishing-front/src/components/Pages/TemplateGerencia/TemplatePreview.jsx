@@ -9,11 +9,10 @@ function TemplatePreview({ template }) {
         </div>
       );
     }
-
     // Usar o template salvo diretamente (já vem com o wrapper)
     const previewHtml = template.code
       .replace(/{{title}}/g, 'Título do Email')
-      .replace(/{{body}}/g, '<p>Este é o conteúdo do corpo do email que será enviado para o destinatário.</p>')
+      .replace(/{{body_text}}/g, '<p>Este é o conteúdo do corpo do email que será enviado para o destinatário.</p>')
       .replace(/{{name}}/g, 'João Silva')
       .replace(/{{link}}/g, '#')
       .replace(/{{button_text}}/g, 'Clique Aqui');
@@ -33,7 +32,7 @@ function TemplatePreview({ template }) {
         {renderTemplateContent()}
       </div>
       <div className="preview-info">
-        <p><strong>Variáveis disponíveis:</strong> {'{{title}}'}, {'{{body}}'}, {'{{name}}'}, {'{{link}}'}, {'{{button_text}}'}</p>
+        <p><strong>Variáveis disponíveis:</strong> {'{{title}}'}, {'{{body_text}}'}, {'{{name}}'}, {'{{link}}'}, {'{{button_text}}'}</p>
       </div>
     </div>
   );

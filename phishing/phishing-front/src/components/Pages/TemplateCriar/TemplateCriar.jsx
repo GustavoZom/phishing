@@ -23,7 +23,6 @@ function TemplateCriar() {
     name: '',
     desc: '',
     code: ''
-    // REMOVER preview_data do estado inicial
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +31,7 @@ function TemplateCriar() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [previewVariables, setPreviewVariables] = useState({
     title: 'Título do Email',
-    body: '<p>Este é o conteúdo principal do email que será personalizado para cada campanha.</p>',
+    body_text: '<p>Este é o conteúdo principal do email que será personalizado para cada campanha.</p>',
     name: 'Nome do Usuário',
     button_text: 'Clique Aqui'
   });
@@ -48,16 +47,6 @@ function TemplateCriar() {
   const handleEditorChange = (e) => {
     const htmlContent = e.target.value;
     handleInputChange('code', htmlContent);
-  };
-
-  // Função para gerar preview em tempo real (apenas para exibição)
-  const generatePreview = (htmlContent) => {
-    return htmlContent
-      .replace(/{{title}}/g, previewVariables.title)
-      .replace(/{{body}}/g, previewVariables.body)
-      .replace(/{{name}}/g, previewVariables.name)
-      .replace(/{{link}}/g, '#')
-      .replace(/{{button_text}}/g, previewVariables.button_text);
   };
 
   const handlePreviewVariableChange = (variable, value) => {
@@ -84,7 +73,6 @@ function TemplateCriar() {
         name: template.name || '',
         desc: template.description || '',
         code: editorContent
-        // REMOVER preview_data
       });
 
     } catch (err) {
@@ -94,7 +82,7 @@ function TemplateCriar() {
   };
 
   const validateTemplate = (code) => {
-    const requiredVariables = ['{{title}}', '{{body}}', '{{name}}', '{{link}}', '{{button_text}}'];
+    const requiredVariables = ['{{title}}', '{{body_text}}', '{{name}}', '{{link}}', '{{button_text}}'];
     const missingVariables = requiredVariables.filter(variable => !code.includes(variable));
     
     if (missingVariables.length > 0) {
@@ -125,13 +113,11 @@ function TemplateCriar() {
       setError('');
       setSuccess('');
 
-      // REMOVER preview_data do envio
       if (selectedTemplate) {
         await templateService.updateTemplate(selectedTemplate.id, {
           name: formData.name,
           description: formData.desc || '',
           code: formData.code
-          // REMOVER preview_data
         });
         setSuccess('Template atualizado com sucesso!');
       } else {
@@ -139,12 +125,11 @@ function TemplateCriar() {
           name: formData.name,
           description: formData.desc || '',
           code: formData.code
-          // REMOVER preview_data
         });
         setSuccess('Template criado com sucesso!');
       }
 
-      setFormData({ name: '', desc: '', code: '' }); // REMOVER preview_data
+      setFormData({ name: '', desc: '', code: '' });
       setSelectedTemplate(null);
       setRefreshTrigger(prev => prev + 1);
       
@@ -170,7 +155,7 @@ function TemplateCriar() {
   <h2 style="color: #333; margin-bottom: 15px;">Olá {{name}},</h2>
   
   <div style="font-size: 16px; line-height: 1.6;">
-    {{body}}
+    {{body_text}}
   </div>
   
   <div style="text-align: center; margin: 25px 0;">
@@ -189,6 +174,15 @@ function TemplateCriar() {
       code: baseTemplate.trim()
     }));
     setError('');
+  };
+
+  const generatePreview = (htmlContent) => {
+    return htmlContent
+      .replace(/{{title}}/g, previewVariables.title)
+      .replace(/{{body_text}}/g, previewVariables.body_text)
+      .replace(/{{name}}/g, previewVariables.name)
+      .replace(/{{link}}/g, '#')
+      .replace(/{{button_text}}/g, previewVariables.button_text);
   };
 
   const renderPreview = () => {
@@ -218,8 +212,8 @@ function TemplateCriar() {
         <div className="campanhaTitle">
           <h2>{selectedTemplate ? 'Editar Template' : 'Criar Template'}</h2>
           <button 
-            className="btnNovoGrupo"
-            onClick={() => navigate('/templates')}
+            className="btn-voltar-template"
+            onClick={() => navigate('/templateGerencia')}
           >
             Voltar para Templates
           </button>
@@ -241,13 +235,13 @@ function TemplateCriar() {
               <h3>Dados do Template</h3>
               
               {error && (
-                <div className="errorMessageForm">
+                <div className="error-message-form">
                   {error}
                 </div>
               )}
               
               {success && (
-                <div className="successMessage">
+                <div className="success-message">
                   {success}
                 </div>
               )}
@@ -315,7 +309,6 @@ function TemplateCriar() {
                   </Editor>
                 </div>
 
-                {/* Configuração das Variáveis do Preview */}
                 <div className="previewVariablesConfig">
                   <h4>Configurar Preview:</h4>
                   <div className="variablesInputs">
@@ -349,8 +342,8 @@ function TemplateCriar() {
                     <div className="variableInput full-width">
                       <label>Corpo do Email:</label>
                       <textarea 
-                        value={previewVariables.body.replace(/<[^>]*>/g, '')}
-                        onChange={(e) => handlePreviewVariableChange('body', `<p>${e.target.value}</p>`)}
+                        value={previewVariables.body_text.replace(/<[^>]*>/g, '')}
+                        onChange={(e) => handlePreviewVariableChange('body_text', `<p>${e.target.value}</p>`)}
                         placeholder="Conteúdo do email"
                         rows="3"
                       />
@@ -366,7 +359,7 @@ function TemplateCriar() {
                       <span>Título do email</span>
                     </div>
                     <div className="variableItem">
-                      <code>{'{{body}}'}</code>
+                      <code>{'{{body_text}}'}</code>
                       <span>Corpo do email</span>
                     </div>
                     <div className="variableItem">
@@ -401,10 +394,10 @@ function TemplateCriar() {
               <button 
                 className="btnCancelar" 
                 onClick={() => {
-                  setFormData({ name: '', desc: '', code: '' }); // REMOVER preview_data
+                  setFormData({ name: '', desc: '', code: '' });
                   setPreviewVariables({
                     title: 'Título do Email',
-                    body: '<p>Este é o conteúdo principal do email que será personalizado para cada campanha.</p>',
+                    body_text: '<p>Este é o conteúdo principal do email que será personalizado para cada campanha.</p>',
                     name: 'Nome do Usuário',
                     button_text: 'Clique Aqui'
                   });
