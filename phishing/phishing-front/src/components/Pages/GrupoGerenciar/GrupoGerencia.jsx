@@ -168,6 +168,9 @@ function GrupoGerencia() {
 
   return (
     <div className="mainContainer">
+      <div className="hSidenav">
+      </div>
+      
       <div className="gGerenciarContainer">
         <div className="campanhaTitle">
           <h2>Grupos</h2>

@@ -136,6 +136,9 @@ function GrupoCriar() {
 
   return (
     <div className="mainContainer">
+      <div className="hSidenav">
+      </div>
+      
       <div className="gCriarContainer">
          <div className="campanhaTitle">
           <h2>Grupos</h2>

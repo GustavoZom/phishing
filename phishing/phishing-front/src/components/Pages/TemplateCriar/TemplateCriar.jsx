@@ -208,6 +208,9 @@ function TemplateCriar() {
 
   return (
     <div className="mainContainer">
+      <div className="hSidenav">
+      </div>
+      
       <div className="gCriarContainer">
         <div className="campanhaTitle">
           <h2>{selectedTemplate ? 'Editar Template' : 'Criar Template'}</h2>

@@ -70,6 +70,9 @@ function CampanhaGerencia() {
 
     return (
         <div className="mainContainer">
+            <div className="hSidenav">
+            </div>
+            
             <div className="cFilterContent">
                 <div className="campanhaTitle">
                     <h2>Campanhas</h2>
