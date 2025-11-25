@@ -47,8 +47,8 @@ class TemplateService(BaseService):
         safe_css_properties = {
             'color','font-family','font-size','font-weight','font-style','text-align','text-decoration','text-transform','line-height','letter-spacing',
             'background-color','background-image','background-position','background-repeat',
-            'border','border-color','border-width','border-style','border-radius',
-            'margin','margin-top','margin-right','margin-bottom','margin-left','padding','padding-top','padding-right','padding-bottom','padding-left','width','height','max-width','max-height','min-width','min-height','display'
+            'border','border-color','border-width','border-style','border-radius','border-top','border-bottom','border-top','border-left','border-right',
+            'margin','margin-top','margin-right','margin-bottom','margin-left','padding','padding-top','padding-right','padding-bottom','padding-left','width','height','max-width','max-height','min-width','min-height','display',
         }
         allowed_attributes = deepcopy(nh3.ALLOWED_ATTRIBUTES)
         allowed_attributes['*'] = {'style'}
