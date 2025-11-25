@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Editor, { 
-  BtnBold,
-  BtnBulletList,
-  BtnClearFormatting,
-  BtnItalic,
-  BtnLink,
-  BtnNumberedList,
-  BtnRedo,
-  BtnStrikeThrough,
-  BtnStyles,
-  BtnUnderline,
-  BtnUndo,
-  HtmlButton,
-  Separator,
-  Toolbar,
-} from 'react-simple-wysiwyg';
+
 import TemplateList from '../../Modules/TemplateList/TemplateList';
 import { templateService } from '../../services/templateService';
 import './templateCriar.css';
 
+import JoditEditor from 'jodit-react';
+
 function TemplateCriar() {
+
+  const editor = useRef(null);
+  const [content, setContent] = useState('');
+
+  const config = useMemo(() => ({
+      readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+      language: 'pt_br',
+      speechRecognize : false,
+      disablePlugins: ['aiAssistant'],
+      history: {
+        enable: true,
+        maxHistoryLength: 100
+    }
+    })
+  );
+
+
+
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -49,7 +54,7 @@ function TemplateCriar() {
   };
 
   const handleEditorChange = (e) => {
-    const htmlContent = e.target.value;
+    const htmlContent = e;
     handleInputChange('code', htmlContent);
   };
 
@@ -287,38 +292,13 @@ function TemplateCriar() {
                       Template Base
                     </button>
                   </div>
-                  
-                  <Editor
+                  <JoditEditor
+                    ref={editor}
                     value={editorValue}
-                    onChange={handleEditorChange}
-                    containerProps={{
-                      style: { 
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        minHeight: '400px',
-                        resize: 'vertical'
-                      }
-                    }}
-                  >
-                    <Toolbar>
-                      <BtnUndo />
-                      <BtnRedo />
-                      <Separator />
-                      <BtnBold />
-                      <BtnItalic />
-                      <BtnUnderline />
-                      <BtnStrikeThrough />
-                      <Separator />
-                      <BtnNumberedList />
-                      <BtnBulletList />
-                      <Separator />
-                      <BtnLink />
-                      <BtnClearFormatting />
-                      <HtmlButton />
-                      <Separator />
-                      <BtnStyles />
-                    </Toolbar>
-                  </Editor>
+                    onBlur={newcontent => handleEditorChange(newcontent)}
+                    config={config}
+                  />
+                
                 </div>
 
                 <div className="previewVariablesConfig">

@@ -5,11 +5,45 @@ import { groupService } from '../../services/groupService';
 import './grupoCriar.css';
 
 function GrupoCriar() {
+  const [showCsvModal, setShowCsvModal] = useState(false);
+  const [groupMembers, setGroupMembers] = useState([]);
+
+  // Função chamada ao clicar no botão
+  const handleCsvClick = () => {
+    setShowCsvModal(true);
+  };
+
+  // Lê o CSV e adiciona os membros
+  const handleCsvUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const text = await file.text();
+    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+
+    const newMembers = [];
+
+    for (const line of lines) {
+      const [name, email, person_code] = line.split(",");
+
+      if (!name || !email || !person_code) continue;
+
+      newMembers.push({
+        id: Date.now() + Math.random(),
+        name: name.trim(),
+        email: email.trim(),
+        person_code: person_code.trim(),
+      });
+    }
+
+    setGroupMembers(prev => [...prev, ...newMembers]);
+    setShowCsvModal(false);
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     desc: ''
   });
-  const [groupMembers, setGroupMembers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -206,6 +240,9 @@ function GrupoCriar() {
               <div className="membrosHeader">
                 <h3>Membros do Grupo</h3>
                 <div className="membrosHeaderActions">
+                  <button className="btn-add-member" style={{fontWeight:'normal', fontSize:'0.8rem'}} title="Exportar CSV" onClick={handleCsvClick}>
+                        CSV
+                      </button>
                   <button 
                     className="btn-add-member"
                     onClick={handleAddMember}
@@ -248,7 +285,37 @@ function GrupoCriar() {
           </div>
         </div>
       </div>
+ {showCsvModal && (
+        <div style={{
+          position: "fixed",
+          top: 0, left: 0,
+          width: "100vw", height: "100vh",
+          background: "rgba(0,0,0,0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+          <div style={{
+            background: "#fff",
+            padding: "20px",
+            borderRadius: "8px",
+            width: "30%", height:"30%",
+            textAlign: "center"
+          }}>
+            <h3 style={{marginBottom:'1rem'}}>Importar membros via CSV</h3>
 
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleCsvUpload}
+            />
+
+            <button onClick={() => setShowCsvModal(false)} style={{marginTop:'1rem'}} className='btn-cancel'>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
       {showAddMemberModal && (
         <div className="modal-overlay">
           <div className="modal-content">

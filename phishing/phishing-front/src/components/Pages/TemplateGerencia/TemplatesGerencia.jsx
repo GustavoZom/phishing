@@ -44,7 +44,8 @@ function TemplatesGerencia() {
     }
   };
 
-  const handleTemplateSelect = (template) => {
+  const handleTemplateSelect = async (template) => {
+    template = await templateService.getTemplateById(template.id);
     setSelectedTemplate(template);
   };
 

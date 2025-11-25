@@ -137,7 +137,7 @@ function UserList({ campaignId, groupMembers }){
             <div className="userListContainer">
                 {users.length === 0 ? (
                     <div className="no-data">
-                        Nenhum usuario encontrado para esta campanha
+                        Nenhum email encontrado para esta campanha
                     </div>
                 ) : (
                     users.map((user) => (

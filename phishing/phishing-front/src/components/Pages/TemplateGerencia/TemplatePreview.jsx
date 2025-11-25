@@ -2,6 +2,7 @@ import './templatesGerencia.css';
 
 function TemplatePreview({ template }) {
   const renderTemplateContent = () => {
+    console.log(template)
     if (!template || !template.code) {
       return (
         <div className="preview-empty">
