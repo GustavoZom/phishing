@@ -1,11 +1,8 @@
-// src/services/campaignService.js
 import api from './api';
 
 export const campaignService = {
   async getCampaigns(filters = {}) {
     try {
-      console.log('Buscando campanhas com filtros:', filters);
-      
       const params = new URLSearchParams();
       
       if (filters.id) params.append('id', filters.id);
@@ -16,49 +13,39 @@ export const campaignService = {
       if (filters.per_page) params.append('per_page', filters.per_page);
       
       const response = await api.get(`/campaign/?${params.toString()}`);
-      console.log('Campanhas carregadas:', response.data);
       return response.data;
-      
     } catch (error) {
-      console.error('Erro ao buscar campanhas:', error);
-      throw new Error(error.response?.data?.message || 'Erro ao carregar campanhas');
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Erro ao carregar campanhas';
+      throw new Error(errorMessage);
     }
   },
 
   async getCampaignStats(campaignId) {
     try {
-      console.log('Buscando estatísticas da campanha:', campaignId);
-      
-      // Primeira chamada: buscar todos os emails (sem filtro)
       const allEmailsResponse = await api.get(`/campaign/${campaignId}/email?per_page=1000`);
       const allEmails = allEmailsResponse.data.items || [];
       const totalEmails = allEmails.length;
       
-      // Segunda chamada: buscar apenas os que interagiram (interacted=true)
       const clickedEmailsResponse = await api.get(`/campaign/${campaignId}/email?interacted=true&per_page=1000`);
       const clickedEmails = clickedEmailsResponse.data.items || [];
       const totalClicked = clickedEmails.length;
       
-      // Calcular taxa de conversão
       const conversionRate = totalEmails > 0 ? (totalClicked / totalEmails) * 100 : 0;
       
       return {
         totalEmails,
         clickedEmails: totalClicked,
         conversionRate: Math.round(conversionRate * 100) / 100,
-        emails: allEmails // Retorna todos os emails para a lista
+        emails: allEmails
       };
-      
     } catch (error) {
-      console.error('Erro ao buscar estatísticas:', error);
-      throw new Error(error.response?.data?.message || 'Erro ao carregar estatísticas');
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Erro ao carregar estatísticas';
+      throw new Error(errorMessage);
     }
   },
 
   async createCampaign(campaignData) {
     try {
-      console.log('Criando nova campanha:', campaignData);
-      
       const requiredFields = ['name', 'group_id', 'email', 'start_date', 'end_date', 'send_time'];
       const missingFields = requiredFields.filter(field => !campaignData[field]);
       
@@ -75,62 +62,36 @@ export const campaignService = {
       formData.append('end_date', campaignData.end_date);
       formData.append('send_time', campaignData.send_time);
       
-      if (campaignData.template_id) {
-        formData.append('template_id', campaignData.template_id);
-      }
-      if (campaignData.subject_text) {
-        formData.append('subject_text', campaignData.subject_text);
-      }
-      if (campaignData.title_text) {
-        formData.append('title_text', campaignData.title_text);
-      }
-      if (campaignData.body_text) {
-        formData.append('body_text', campaignData.body_text);
-      }
-      if (campaignData.button_text) {
-        formData.append('button_text', campaignData.button_text);
-      }
-      if (campaignData.desc) {
-        formData.append('desc', campaignData.desc);
-      }
+      if (campaignData.template_id) formData.append('template_id', campaignData.template_id);
+      if (campaignData.subject_text) formData.append('subject_text', campaignData.subject_text);
+      if (campaignData.title_text) formData.append('title_text', campaignData.title_text);
+      if (campaignData.body_text) formData.append('body_text', campaignData.body_text);
+      if (campaignData.button_text) formData.append('button_text', campaignData.button_text);
+      if (campaignData.desc) formData.append('desc', campaignData.desc);
       
       const response = await api.post('/campaign/', formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
       
-      console.log('Campanha criada com sucesso:', response.data);
       return response.data;
-      
     } catch (error) {
-      console.error('Erro ao criar campanha:', error);
-      
-      const errorMsg = error.response?.data?.message || 
-                      error.response?.data?.error || 
-                      error.message ||
-                      'Erro ao criar campanha';
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message || 'Erro ao criar campanha';
       throw new Error(errorMsg);
     }
   },
 
   async getCampaignById(id) {
     try {
-      console.log('Buscando campanha ID:', id);
       const response = await api.get(`/campaign/${id}`);
-      console.log('Campanha encontrada:', response.data);
       return response.data;
-      
     } catch (error) {
-      console.error('Erro ao buscar campanha:', error);
-      throw new Error(error.response?.data?.message || 'Erro ao carregar campanha');
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Erro ao carregar campanha';
+      throw new Error(errorMessage);
     }
   },
 
   async updateCampaign(id, campaignData) {
     try {
-      console.log('Atualizando campanha ID:', id, campaignData);
-      
       const formData = new FormData();
       if (campaignData.name) formData.append('name', campaignData.name);
       if (campaignData.group_id) formData.append('group_id', campaignData.group_id);
@@ -144,30 +105,23 @@ export const campaignService = {
       if (campaignData.button_text) formData.append('button_text', campaignData.button_text);
       
       const response = await api.patch(`/campaign/${id}`, formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
       
-      console.log('Campanha atualizada:', response.data);
       return response.data;
-      
     } catch (error) {
-      console.error('Erro ao atualizar campanha:', error);
-      throw new Error(error.response?.data?.message || 'Erro ao atualizar campanha');
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Erro ao atualizar campanha';
+      throw new Error(errorMessage);
     }
   },
 
   async deleteCampaign(id) {
     try {
-      console.log('Excluindo campanha ID:', id);
       const response = await api.delete(`/campaign/${id}`);
-      console.log('Campanha excluída:', response.data);
       return response.data;
-      
     } catch (error) {
-      console.error('Erro ao excluir campanha:', error);
-      throw new Error(error.response?.data?.message || 'Erro ao excluir campanha');
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Erro ao excluir campanha';
+      throw new Error(errorMessage);
     }
   }
 };

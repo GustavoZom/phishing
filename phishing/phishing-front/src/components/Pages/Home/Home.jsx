@@ -6,7 +6,6 @@ import CampaignList from '../../Modules/CampaignList/CampaignList';
 import { campaignService } from '../../services/campaignService';
 import './home.css';
 
-// Constantes para configs
 const STATS_CONFIG = {
     active: {
         icon: BsFileEarmarkPlay,
@@ -36,7 +35,6 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-    //Carregar estatística
     const loadCampaignStats = useCallback(async () => {
         try {
             setLoading(true);
@@ -69,7 +67,6 @@ function Home() {
         setRefreshTrigger(prev => prev + 1);
     };
 
-    //Seção de estatística
     const StatItem = ({ type, value }) => {
         const config = STATS_CONFIG[type];
         const IconComponent = config.icon;
@@ -85,7 +82,6 @@ function Home() {
         );
     };
 
-    //Seção de visão geral
     const GeneralViewSection = () => (
         <div className="generalView">
             <h2>Visão Geral</h2>
@@ -97,7 +93,6 @@ function Home() {
         </div>
     );
 
-    //Cabeçalho das campanhas
     const CampaignHeader = () => (
         <div className="campaignHeader">
             <h2>Campanhas</h2>
@@ -105,7 +100,6 @@ function Home() {
                 className="btnRefresh"
                 onClick={handleRefresh}
                 disabled={loading}
-                aria-label={loading ? 'Atualizando Campanhas' : 'Atualizar campanhas'}
             >
                 {loading ? 'Atualizando...' : 'Atualizar'}
             </button>

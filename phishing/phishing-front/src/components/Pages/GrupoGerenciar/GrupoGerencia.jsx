@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BsApp, BsJustify, BsInboxes, BsPeople, BsGrid1X2, BsPersonCircle } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import GroupList from '../../Modules/GroupList/GroupList';
 import { groupService } from '../../services/groupService';
@@ -9,6 +10,7 @@ function GrupoGerencia() {
   const [groupMembers, setGroupMembers] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [showAddMemberModal, setShowAddMemberModal] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [memberForm, setMemberForm] = useState({
@@ -26,19 +28,24 @@ function GrupoGerencia() {
   const handleGroupSelect = (group) => {
     setSelectedGroup(group);
     setGroupMembers([]);
+    setError('');
   };
 
   const handleRefresh = () => {
     setRefreshTrigger(prev => prev + 1);
+    setSelectedGroup(null);
+    setError('');
   };
 
   const loadGroupMembers = async (groupId) => {
     try {
       setLoading(true);
+      setError('');
       const response = await groupService.getGroupMembers(groupId);
       setGroupMembers(response.items || []);
     } catch (error) {
       console.error('Erro ao carregar membros:', error);
+      setError(error.message);
       setGroupMembers([]);
     } finally {
       setLoading(false);
@@ -67,11 +74,12 @@ function GrupoGerencia() {
     }
 
     try {
-      await groupService.deleteMember(selectedGroup.id, memberId);
+      setError('');
+      await groupService.deleteMember(memberId);
       loadGroupMembers(selectedGroup.id);
     } catch (error) {
       console.error('Erro ao excluir membro:', error);
-      alert('Erro ao excluir membro: ' + error.message);
+      setError(error.message);
     }
   };
 
@@ -79,20 +87,19 @@ function GrupoGerencia() {
     e.preventDefault();
     
     if (!memberForm.name.trim() || !memberForm.email.trim() || !memberForm.person_code.trim()) {
-      alert('Todos os campos são obrigatórios');
+      setError('Todos os campos são obrigatórios');
       return;
     }
 
     try {
+      setError('');
       if (editingMember) {
-        // Atualizar membro existente
         await groupService.updateMember(editingMember.id, {
           name: memberForm.name,
           email: memberForm.email,
           person_code: memberForm.person_code
         });
       } else {
-        // Adicionar novo membro
         await groupService.addMemberToGroup(selectedGroup.id, {
           name: memberForm.name,
           email: memberForm.email,
@@ -105,7 +112,7 @@ function GrupoGerencia() {
       setMemberForm({ name: '', email: '', person_code: '' });
     } catch (error) {
       console.error('Erro ao salvar membro:', error);
-      alert('Erro ao salvar membro: ' + error.message);
+      setError(error.message);
     }
   };
 
@@ -115,12 +122,13 @@ function GrupoGerencia() {
     }
 
     try {
+      setError('');
       await groupService.deleteGroup(selectedGroup.id);
       setSelectedGroup(null);
       handleRefresh();
     } catch (error) {
       console.error('Erro ao excluir grupo:', error);
-      alert('Erro ao excluir grupo: ' + error.message);
+      setError(error.message);
     }
   };
 
@@ -152,15 +160,17 @@ function GrupoGerencia() {
             onClick={() => handleEditMember(member)}
             title="Editar membro"
           >
-            ✏️
+            <i className="bi bi-pencil"></i>
           </button>
-          <button 
-            className="btn-delete-member"
-            onClick={() => handleDeleteMember(member.id)}
-            title="Excluir membro"
-          >
-            🗑️
-          </button>
+          {member.can_be_deleted !== false && (
+            <button 
+              className="btn-delete-member"
+              onClick={() => handleDeleteMember(member.id)}
+              title="Excluir membro"
+            >
+              <i className="bi bi-trash"></i>
+            </button>
+          )}
         </div>
       </div>
     ));
@@ -172,12 +182,18 @@ function GrupoGerencia() {
       </div>
       
       <div className="gGerenciarContainer">
-        <div className="campanhaTitle">
+        <div className="gerenciaTitle">
           <h2>Grupos</h2>
           <Link to="/grupoCriar">
             <span className="btn-novo-grupo">Novo Grupo</span>
           </Link>
         </div>
+
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
         
         <div className="gSectionContainer">
           <div className="gGerenciarSection left">
@@ -220,7 +236,7 @@ function GrupoGerencia() {
                         onClick={handleAddMember}
                         title="Adicionar membro"
                       >
-                        +
+                        <i className="bi bi-plus-lg"></i>
                       </button>
                     </div>
                   </div>
@@ -240,13 +256,14 @@ function GrupoGerencia() {
                 </div>
 
                 <div className="formActions">
-                  <button className="btn-editar">Editar Grupo</button>
-                  <button 
-                    className="btn-delete"
-                    onClick={handleDeleteGroup}
-                  >
-                    Excluir Grupo
-                  </button>
+                  {selectedGroup.can_be_deleted !== false && (
+                    <button 
+                      className="btn-delete"
+                      onClick={handleDeleteGroup}
+                    >
+                      <i className="bi bi-trash"></i> Excluir Grupo
+                    </button>
+                  )}
                 </div>
               </>
             ) : (
@@ -259,7 +276,6 @@ function GrupoGerencia() {
         </div>
       </div>
 
-      {/* Modal para adicionar/editar membro */}
       {showAddMemberModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -269,7 +285,7 @@ function GrupoGerencia() {
                 className="btn-close-modal"
                 onClick={() => setShowAddMemberModal(false)}
               >
-                ×
+                <i className="bi bi-x-lg"></i>
               </button>
             </div>
             
@@ -329,11 +345,5 @@ function GrupoGerencia() {
     </div>
   );
 }
-
-
-
-
-
-
 
 export default GrupoGerencia;

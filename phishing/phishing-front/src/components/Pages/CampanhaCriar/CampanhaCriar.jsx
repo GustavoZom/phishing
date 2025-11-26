@@ -63,7 +63,6 @@ function CampanhaCriar() {
       const template = await templateService.getTemplateById(templateId);
       setSelectedTemplate(template);
       
-      // Preencher campos com valores padrão do template
       setFormData(prev => ({
         ...prev,
         subject_text: prev.subject_text || 'Assunto Importante',
@@ -84,7 +83,6 @@ function CampanhaCriar() {
   };
 
   const handleCreateCampaign = async () => {
-    // Validações básicas
     const requiredFields = [
       'name', 'group_id', 'template_id', 'start_date', 
       'end_date', 'send_time', 'email', 'subject_text',
@@ -103,13 +101,10 @@ function CampanhaCriar() {
       setError('');
       setSuccess('');
 
-      console.log('Criando campanha:', formData);
-      
       await campaignService.createCampaign(formData);
 
       setSuccess('Campanha criada com sucesso!');
       
-      // Limpar o form
       setFormData({
         name: '',
         group_id: '',
@@ -142,7 +137,6 @@ function CampanhaCriar() {
       );
     }
 
-    // Gerar preview dinamicamente do código do template
     const previewHtml = selectedTemplate.code
       .replace(/{{title}}/g, formData.title_text || 'Título do Email')
       .replace(/{{body_text}}/g, formData.body_text || 'Conteúdo do email...')
@@ -179,7 +173,6 @@ function CampanhaCriar() {
           </div>
         )}
 
-        {/* Dados da campanha */}
         <div className="sectionContainer">
           <h3 className="sectionTitle">Dados da Campanha</h3>
           <div className="sectionBox">
@@ -273,7 +266,6 @@ function CampanhaCriar() {
           </div>
         </div>
 
-        {/* Configurar Template */}
         <div className="sectionContainer">
           <h3 className="sectionTitle">
             Configurar Template {selectedTemplate && `- ${selectedTemplate.name}`}
@@ -327,7 +319,6 @@ function CampanhaCriar() {
           </div>
         </div>
 
-        {/* Prévia do E-mail */}
         <div className="sectionContainer">
           <h3 className="sectionTitle">Prévia do E-mail</h3>
           <div className="sectionBox previewBox">
@@ -337,7 +328,6 @@ function CampanhaCriar() {
           </div>
         </div>
 
-        {/* Botões de Ação */}
         <div className="actionButtons">
           <button 
             className="btn-cancel" 

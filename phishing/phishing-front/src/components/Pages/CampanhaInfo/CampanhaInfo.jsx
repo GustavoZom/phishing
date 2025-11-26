@@ -5,12 +5,14 @@ import Conversao from "./Conversao";
 import UserList from "./UserList";
 import { groupService } from '../../services/groupService';
 import { campaignService } from '../../services/campaignService';
+import { templateService } from '../../services/templateService';
 import { useNavigate } from 'react-router-dom';
 import './campanhaInfo.css';
 
 function CampanhaInfo(){
     const { id } = useParams();
     const [campaign, setCampaign] = useState(null);
+    const [template, setTemplate] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [groupMembers, setGroupMembers] = useState([]);
@@ -28,7 +30,15 @@ function CampanhaInfo(){
             const campaignData = await campaignService.getCampaignById(id);
             setCampaign(campaignData);
             
-            // Carregar membros do grupo mesmo para campanhas inativas
+            if (campaignData.template_id) {
+                try {
+                    const templateData = await templateService.getTemplateById(campaignData.template_id);
+                    setTemplate(templateData);
+                } catch (err) {
+                    console.error('Erro ao carregar template:', err);
+                }
+            }
+            
             if (campaignData.group_id) {
                 try {
                     const membersResponse = await groupService.getGroupMembers(campaignData.group_id);
@@ -45,9 +55,32 @@ function CampanhaInfo(){
         }
     };
 
-    // Função para verificar se a campanha está inativa
     const isCampaignInactive = () => {
         return campaign && campaign.status === 'i';
+    };
+
+    const renderEmailPreview = () => {
+        if (!template?.code) {
+            return (
+                <div className="previewPlaceholder">
+                    Template não encontrado
+                </div>
+            );
+        }
+
+        const previewHtml = template.code
+            .replace(/{{title}}/g, campaign.title_text || 'Título do Email')
+            .replace(/{{body_text}}/g, campaign.body_text || 'Conteúdo do email...')
+            .replace(/{{name}}/g, 'Nome do Usuário')
+            .replace(/{{link}}/g, '#')
+            .replace(/{{button_text}}/g, campaign.button_text || 'Clique Aqui');
+
+        return (
+            <div 
+                className="emailPreviewContent"
+                dangerouslySetInnerHTML={{ __html: previewHtml }}
+            />
+        );
     };
 
     if (loading) {
@@ -68,7 +101,7 @@ function CampanhaInfo(){
             <div className="mainContainer">
                 <div className="cInfoContainer">
                     <div className="error-message">
-                        {error || 'Campanha nao encontrada'}
+                        {error || 'Campanha não encontrada'}
                     </div>
                 </div>
             </div>
@@ -83,12 +116,12 @@ function CampanhaInfo(){
             <div className="cInfoContainer">
                 <div className="campanhaTitle">
                     <h2>Campanhas</h2>
-                              <button 
-                                className="btn-voltar-grupo"
-                                onClick={() => navigate('/campanhaGerencia')}
-                                >
-                                Voltar para Campanhas
-                                </button>
+                    <button 
+                        className="btn-voltar-grupo"
+                        onClick={() => navigate('/campanhaGerencia')}
+                    >
+                        Voltar para Campanhas
+                    </button>
                 </div>
                 
                 <div className="cSectionContainer">
@@ -103,7 +136,6 @@ function CampanhaInfo(){
                     </div>
                     
                     <div className="cInfoSection right">
-                        {/* Mostrar Conversao apenas se a campanha NÃO estiver inativa */}
                         {!isCampaignInactive() && (
                             <Conversao campaignId={id} />
                         )}
@@ -111,16 +143,9 @@ function CampanhaInfo(){
                         <div className="emailTemplate">
                             <h2>E-mail</h2>
                             <div className="sectionBox previewBox">
-                                <h3>Previa do E-mail</h3>
+                                <h3>Prévia do E-mail</h3>
                                 <div className="emailPreview">
-                                    <h2 style={{ color: "#e50914" }}>{campaign.title_text || "TITULO DO E-MAIL"}</h2>
-                                    <h3>{campaign.subject_text || "Assunto do e-mail"}</h3>
-                                    <p>
-                                        {campaign.body_text || "Conteudo do e-mail sera exibido aqui..."}
-                                    </p>
-                                    <button className="btn-preview">
-                                        {campaign.button_text || "CLIQUE AQUI"}
-                                    </button>
+                                    {renderEmailPreview()}
                                 </div>
                             </div>
                         </div>

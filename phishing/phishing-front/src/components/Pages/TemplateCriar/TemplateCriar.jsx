@@ -1,30 +1,24 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import TemplateList from '../../Modules/TemplateList/TemplateList';
 import { templateService } from '../../services/templateService';
 import './templateCriar.css';
-
 import JoditEditor from 'jodit-react';
 
 function TemplateCriar() {
-
   const editor = useRef(null);
   const [content, setContent] = useState('');
 
   const config = useMemo(() => ({
-      readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+      readonly: false,
       language: 'pt_br',
-      speechRecognize : false,
+      speechRecognize: false,
       disablePlugins: ['aiAssistant'],
       history: {
         enable: true,
         maxHistoryLength: 100
     }
-    })
-  );
-
-
+  }), []);
 
   const navigate = useNavigate();
   
@@ -298,7 +292,6 @@ function TemplateCriar() {
                     onBlur={newcontent => handleEditorChange(newcontent)}
                     config={config}
                   />
-                
                 </div>
 
                 <div className="previewVariablesConfig">

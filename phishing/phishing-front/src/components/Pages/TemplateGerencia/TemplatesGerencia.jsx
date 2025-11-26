@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import TemplateList from "./TemplateList.jsx";
-import TemplateDetalhes from "./TemplateDetalhes.jsx";
-import TemplatePreview from "./TemplatePreview.jsx";
+import TemplateList from "./TemplateList";
+import TemplateDetalhes from "./TemplateDetalhes";
+import TemplatePreview from "./TemplatePreview";
 import { templateService } from '../../services/templateService';
 import './templatesGerencia.css';
 
@@ -10,6 +10,7 @@ function TemplatesGerencia() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [filters, setFilters] = useState({
     id: '',
     name: '',
@@ -22,22 +23,22 @@ function TemplatesGerencia() {
     loadTemplates();
   }, []);
 
-  // Efeito para recarregar templates quando vier da criação
   useEffect(() => {
     if (location.state?.refresh) {
       loadTemplates();
-      // Limpa o state para não recarregar novamente
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
   const loadTemplates = async (filterParams = {}) => {
     setLoading(true);
+    setError('');
     try {
       const response = await templateService.getTemplates(filterParams);
       setTemplates(response.items || []);
     } catch (error) {
       console.error('Erro ao carregar templates:', error);
+      setError(error.message);
       setTemplates([]);
     } finally {
       setLoading(false);
@@ -45,8 +46,14 @@ function TemplatesGerencia() {
   };
 
   const handleTemplateSelect = async (template) => {
-    template = await templateService.getTemplateById(template.id);
-    setSelectedTemplate(template);
+    try {
+      setError('');
+      const templateData = await templateService.getTemplateById(template.id);
+      setSelectedTemplate(templateData);
+    } catch (error) {
+      console.error('Erro ao carregar template:', error);
+      setError(error.message);
+    }
   };
 
   const handleFilterChange = (field, value) => {
@@ -90,6 +97,12 @@ function TemplatesGerencia() {
             <span>Novo Template</span>
           </Link>
         </div>
+
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
 
         <div className="gSectionContainer">
           <div className="gTemplateSection left">

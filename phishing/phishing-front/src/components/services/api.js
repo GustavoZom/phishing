@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const getBaseURL = () => {
-
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return 'http://localhost:5000/api/v1';
   }
@@ -38,7 +37,6 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('jwt_token');
-
       if (!window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }
