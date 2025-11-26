@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@lexical/react": "^0.38.2",
+    "lexical": "^0.38.2"
+  }
+}
