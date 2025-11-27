@@ -26,7 +26,7 @@ function SideNav() {
       </div>
 
       <div className="bottomIcon">
-        <Link to="/perfil">
+        <Link to="/login">
           <BsPersonCircle className="icon" />
         </Link>
       </div>

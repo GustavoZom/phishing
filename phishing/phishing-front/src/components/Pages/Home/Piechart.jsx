@@ -11,13 +11,13 @@ export default function Piechart({ conversion = 0, total = 100, clicked = 0 }) {
             id: 0, 
             value: clickedValue, 
             label: `Clicados (${clickedValue})`,
-            color: '#26BAB3'
+            color: '#BA4D26'
         },
         { 
             id: 1, 
             value: notClickedValue, 
             label: `Nao Clicados (${notClickedValue})`,
-            color: '#B8B8B8'
+            color: '#26BAB3'
         },
     ].filter(item => item.value > 0);
 
