@@ -73,8 +73,8 @@ function CampanhaGerencia() {
             <div className="hSidenav">
             </div>
             
-            <div className="cFilterContent">
-                <div className="campanhaTitle">
+            <div className="gGerenciarContainer">
+                <div className="gerenciaTitle">
                     <h2>Campanhas</h2>
                     <Link to="/campanhaCriar">
                         <span>Nova Campanha</span>
