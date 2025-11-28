@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BsApp, BsJustify, BsInboxes, BsPeople, BsGrid1X2, BsPersonCircle } from "react-icons/bs";
+import { BsApp, BsJustify, BsInboxes, BsPeople, BsGrid1X2, BsPersonCircle, BsFillTrashFill, BsPencilSquare } from "react-icons/bs";
+import { FaPenToSquare } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
 import GroupList from '../../Modules/GroupList/GroupList';
 import { groupService } from '../../services/groupService';
@@ -160,7 +161,7 @@ function GrupoGerencia() {
             onClick={() => handleEditMember(member)}
             title="Editar membro"
           >
-            <i className="bi bi-pencil"></i>
+            <BsPencilSquare />
           </button>
           {member.can_be_deleted !== false && (
             <button 
@@ -168,7 +169,7 @@ function GrupoGerencia() {
               onClick={() => handleDeleteMember(member.id)}
               title="Excluir membro"
             >
-              <i className="bi bi-trash"></i>
+              <BsFillTrashFill />
             </button>
           )}
         </div>
